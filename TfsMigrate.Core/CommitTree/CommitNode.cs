@@ -1,20 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TfsMigrate.Core.GitFastImport;
+using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class CommitNode : IMarkNode
     {
         public string Reference { get; private set; }
+
         public AuthorNode Author { get; private set; }
+
         public CommitterNode Committer { get; private set; }
+
         public DataNode CommitInfo { get; private set; }
-        public MarkReferenceNode FromCommit { get; private set; }
-        public IList<MarkReferenceNode> MergeCommits { get; private set; }
+
+        public MarkReferenceNode<CommitNode> FromCommit { get; private set; }
+
+        public IList<MarkReferenceNode<CommitNode>> MergeCommits { get; private set; }
+
         public IList<IFileNode> FileNodes { get; private set; }
+
         public int? MarkId { get; private set; }
+
         public bool HasBeenRendered { get; set; }
 
         public CommitNode(
@@ -23,8 +31,8 @@ namespace TfsMigrate.Core.CommitTree
             AuthorNode author,
             CommitterNode committer,
             DataNode commitInfo,
-            MarkReferenceNode fromCommit,
-            IList<MarkReferenceNode> mergeCommits,
+            MarkReferenceNode<CommitNode> fromCommit,
+            IList<MarkReferenceNode<CommitNode>> mergeCommits,
             IList<IFileNode> fileNodes)
         {
             if (string.IsNullOrEmpty(reference))
@@ -40,11 +48,11 @@ namespace TfsMigrate.Core.CommitTree
             this.Committer = committer;
             this.CommitInfo = commitInfo;
             this.FromCommit = fromCommit;
-            this.MergeCommits = (mergeCommits ?? new List<MarkReferenceNode>()).ToList().AsReadOnly();
+            this.MergeCommits = (mergeCommits ?? new List<MarkReferenceNode<CommitNode>>()).ToList().AsReadOnly();
             this.FileNodes = (fileNodes ?? new List<IFileNode>()).ToList().AsReadOnly();
         }
 
-        public void Vist(IVistor vistor)
+        public void Vist(ITraverseCommitTree vistor)
         {
             vistor.VistCommit(this);
         }

@@ -1,9 +1,9 @@
-﻿using TfsMigrate.Core.GitFastImport;
+﻿using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public interface INode
     {
-        void Vist(IVistor vistor);
+        void Vist(ITraverseCommitTree vistor);
     }
 }

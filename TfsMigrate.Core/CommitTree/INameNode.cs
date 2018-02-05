@@ -4,9 +4,12 @@ namespace TfsMigrate.Core.CommitTree
 {
     public interface INameNode : INode
     {
-        string CommandName { get; }
+        string NodeName { get; }
+
         string Name { get; }
+
         string Email { get; }
+
         DateTimeOffset Date { get; }
     }
 }

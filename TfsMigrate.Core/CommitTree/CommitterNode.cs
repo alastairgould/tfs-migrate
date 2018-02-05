@@ -1,11 +1,11 @@
 ﻿using System;
-using TfsMigrate.Core.GitFastImport;
+using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class CommitterNode : INameNode
     {
-        public string CommandName => "committer";
+        public string NodeName => "committer";
 
         public string Name { get; private set; }
 
@@ -20,7 +20,7 @@ namespace TfsMigrate.Core.CommitTree
             this.Date = date;
         }
 
-        public void Vist(IVistor vistor)
+        public void Vist(ITraverseCommitTree vistor)
         {
             vistor.VistCommitter(this);
         }

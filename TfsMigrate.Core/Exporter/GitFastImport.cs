@@ -1,20 +1,17 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Text;
 using TfsMigrate.Core.CommitTree;
+using TfsMigrate.Core.CommitTree.Traverse;
 
-namespace TfsMigrate.Core.GitFastImport
+namespace TfsMigrate.Core.Exporter
 {
-    public class GitFastImport : IGitFastImport
+    public class GitFastImport : ITraverseCommitTree
     {
-        private Stream stream;
+        private GitStreamWriter writer;
 
-        private byte[] _LineFeed = new byte[] {0x0A};
-
-        public GitFastImport(Stream stream)
+        public GitFastImport(GitStreamWriter writer)
         {
-            this.stream = stream;
+            this.writer = writer;
         }
 
         public void ProccessCommit(CommitNode commit)
@@ -24,70 +21,73 @@ namespace TfsMigrate.Core.GitFastImport
 
         public void VistReset(ResetNode resetNode)
         {
-            WriteLine(string.Format("reset {0}", resetNode.Reference));
+            writer.WriteLine(string.Format("reset {0}", resetNode.Reference));
 
             if (resetNode.From != null)
             {
-                WriteString("from ");
+                writer.Write("from ");
                 resetNode.From.Vist(this);
-                WriteLineFeed();
+                writer.WriteLine();
             }
         }
 
         public void VistFileRename(FileRenameNode fileRenameNode)
         {
-            WriteLine(string.Format("C {0} {1}", fileRenameNode.Source, fileRenameNode.Path));
+            writer.WriteLine(string.Format("C {0} {1}", fileRenameNode.Source, fileRenameNode.Path));
         }
 
         public void VistFileModify(FileModifyNode fileModifyNode)
         {
             if (fileModifyNode.Blob != null)
             {
-                WriteString("M 644 ");
+                writer.Write("M 644 ");
                 fileModifyNode.Blob.Vist(this);
-                WriteString(" " + fileModifyNode.Path);
-                WriteLineFeed();
+                writer.Write(" " + fileModifyNode.Path);
+                writer.WriteLine();
             }
             else
             {
-                WriteLine(string.Format("M 644 inline {0}", fileModifyNode.Path));
+                writer.WriteLine(string.Format("M 644 inline {0}", fileModifyNode.Path));
                 fileModifyNode.Data.Vist(this);
-
             }
         }
 
         public void VistData(DataNode dataNode)
         {
             var header = string.Format("data {0}", dataNode._Bytes.Length);
-            WriteLine(header);
-            stream.Write(dataNode._Bytes, 0, dataNode._Bytes.Length);
-            WriteLineFeed();
+            writer.WriteLine(header);
+            writer.BaseStream.Write(dataNode._Bytes, 0, dataNode._Bytes.Length);
+            writer.WriteLine();
         }
 
         public void VistFileDelete(FileDeleteNode dataNode)
         {
-            WriteLine(string.Format("D {0}", dataNode.Path));
+            writer.WriteLine(string.Format("D {0}", dataNode.Path));
         }
 
         public void VistDeleteAll(FileDeleteAllNode dataNode)
         {
-            WriteLine("deleteall");
+            writer.WriteLine("deleteall");
         }
 
         public void VistFileCopy(FileCopyNode dataNode)
         {
-            WriteLine(string.Format("C {0} {1}", dataNode.Source, dataNode.Path));
+            writer.WriteLine(string.Format("C {0} {1}", dataNode.Source, dataNode.Path));
         }
 
         public void VistCommitter(CommitterNode dataNode)
         {
-            var command = dataNode.CommandName;
+            var command = dataNode.NodeName;
+
             if (!string.IsNullOrEmpty(dataNode.Name))
+            {
                 command += " " + dataNode.Name;
+            }
+
             command += string.Format(" <{0}> ", dataNode.Email);
             command += FormatDate(dataNode.Date);
 
-            WriteLine(command);
+            writer.WriteLine(command);
         }
 
         public void VistCommit(CommitNode dataNode)
@@ -95,42 +95,48 @@ namespace TfsMigrate.Core.GitFastImport
             foreach (var fc in dataNode.FileNodes.OfType<FileModifyNode>())
             {
                 if (fc.Blob != null)
+                {
                     fc.Blob.MarkNode.Vist(this);
+                }
             }
 
-            WriteLine(string.Format("commit {0}", dataNode.Reference));
+            writer.WriteLine(string.Format("commit {0}", dataNode.Reference));
 
             if (dataNode.MarkId != null)
             {
                 var command = string.Format("mark :{0}", dataNode.MarkId);
-                WriteLine(command);
+                writer.WriteLine((command));
                 dataNode.HasBeenRendered = true;
             }
 
             if (dataNode.Author != null)
-            dataNode.Author.Vist(this);
+            {
+                dataNode.Author.Vist(this);
+            }
 
             dataNode.Committer.Vist(this);
             dataNode.CommitInfo.Vist(this);
 
             if (dataNode.FromCommit != null)
             {
-                WriteString("from ");
+                writer.Write("from ");
                 dataNode.FromCommit.Vist(this);
-                WriteLineFeed();
+                writer.WriteLine();
             }
 
             foreach (var mc in dataNode.MergeCommits)
             {
-                WriteString("merge ");
+                writer.Write("merge ");
                 mc.Vist(this);
-                WriteLineFeed();
+                writer.WriteLine();
             }
 
             foreach (var fc in dataNode.FileNodes)
+            {
                 fc.Vist(this);
+            }
 
-            WriteLineFeed();
+            writer.WriteLine();
         }
 
         public void VistBlob(BlobNode dataNode)
@@ -139,12 +145,12 @@ namespace TfsMigrate.Core.GitFastImport
             {
                 dataNode.IsRendered = true;
 
-                WriteLine("blob");
+                writer.WriteLine("blob");
 
                 if (dataNode.MarkId != null)
                 {
                     var command = string.Format("mark :{0}", dataNode.MarkId);
-                    WriteLine(command);
+                    writer.WriteLine(command);
 
                     dataNode.HasBeenRendered = true;
                 }
@@ -155,31 +161,28 @@ namespace TfsMigrate.Core.GitFastImport
 
         public void VistAuthor(AuthorNode dataNode)
         {
-            var command = dataNode.CommandName;
+            var command = dataNode.NodeName;
+
             if (!string.IsNullOrEmpty(dataNode.Name))
+            {
                 command += " " + dataNode.Name;
+            }
+
             command += string.Format(" <{0}> ", dataNode.Email);
             command += FormatDate(dataNode.Date);
 
-            WriteLine(command);
+            writer.WriteLine(command);
         }
-        public void VistMarkReference(MarkReferenceNode dataNode)
+
+        public void VistMarkReference<T>(MarkReferenceNode<T> dataNode) where T : IMarkNode
         {
             if (!dataNode.HasBeenRendered)
+            {
                 throw new InvalidOperationException("A MarkCommand cannot be referenced if it has not been rendered.");
+            }
 
             var reference = string.Format(":{0}", dataNode.MarkId);
-            WriteString(reference);
-        }
-
-        private void OutputMark(IMarkNode markNode)
-        {
-            if (markNode.MarkId != null)
-            {
-                var command = string.Format("mark :{0}", markNode.MarkId);
-                WriteLine(command);
-                markNode.HasBeenRendered = true;
-            }
+            writer.Write(reference);
         }
 
         private static long ToUnixTimestamp(DateTimeOffset dt)
@@ -191,25 +194,7 @@ namespace TfsMigrate.Core.GitFastImport
         private static string FormatDate(DateTimeOffset date)
         {
             var timestamp = ToUnixTimestamp(date);
-
             return string.Format("{0} +0000", timestamp);
-        }
-
-        private void WriteLine(string s)
-        {
-            WriteString(s);
-            WriteLineFeed();
-        }
-
-        private void WriteString(string s)
-        {
-            var bytes = Encoding.UTF8.GetBytes(s);
-            stream.Write(bytes, 0, bytes.Length);
-        }
-
-        private void WriteLineFeed()
-        {
-            stream.Write(_LineFeed, 0, 1);
         }
     }
 }

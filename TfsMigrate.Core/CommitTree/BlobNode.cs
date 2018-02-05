@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using TfsMigrate.Core.GitFastImport;
+using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
@@ -23,7 +23,9 @@ namespace TfsMigrate.Core.CommitTree
                 return retval;
             }
         }
+
         private static Dictionary<byte[], BlobNode> _DataBlobs = new Dictionary<byte[], BlobNode>(new ByteComparer());
+
         public static BlobNode BuildBlob(byte[] data, int? markId)
         {
             var hasher = SHA1.Create();
@@ -44,7 +46,9 @@ namespace TfsMigrate.Core.CommitTree
         }
 
         public bool IsRendered { get; set; }
+
         public DataNode DataNode { get; private set; }
+
         public string Filename { get; private set; }
 
         public int? MarkId { get; private set; }
@@ -61,7 +65,7 @@ namespace TfsMigrate.Core.CommitTree
         private BlobNode(byte[] data, int? markId)
             : this(new DataNode(data), markId) { }
 
-        public void Vist(IVistor vistor)
+        public void Vist(ITraverseCommitTree vistor)
         {
             vistor.VistBlob(this);
         }

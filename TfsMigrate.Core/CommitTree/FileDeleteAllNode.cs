@@ -1,4 +1,4 @@
-﻿using TfsMigrate.Core.GitFastImport;
+﻿using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
@@ -11,7 +11,7 @@ namespace TfsMigrate.Core.CommitTree
             this.Path = null;
         }
 
-        public void Vist(IVistor vistor)
+        public void Vist(ITraverseCommitTree vistor)
         {
             vistor.VistDeleteAll(this);
         }

@@ -1,12 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text;
-using TfsMigrate.Core.GitFastImport;
+using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class DataNode : INode
     {
         public ReadOnlyCollection<byte> Bytes { get { return new ReadOnlyCollection<byte>(this._Bytes); } }
+
         internal byte[] _Bytes;
 
         public DataNode(byte[] bytes)
@@ -19,7 +20,7 @@ namespace TfsMigrate.Core.CommitTree
             this._Bytes = Encoding.UTF8.GetBytes(str);
         }
 
-        public void Vist(IVistor vistor)
+        public void Vist(ITraverseCommitTree vistor)
         {
             vistor.VistData(this);
         }
