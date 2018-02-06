@@ -1,8 +1,6 @@
-﻿using TfsMigrate.Core.CommitTree;
-
-namespace TfsMigrate.Core.GitFastImport
+﻿namespace TfsMigrate.Core.CommitTree.Traverse
 {
-    public interface IVistor
+    public interface ITraverseCommitTree
     {
         void VistReset(ResetNode resetNode);
         void VistCommit(CommitNode nameNode);
@@ -15,6 +13,6 @@ namespace TfsMigrate.Core.GitFastImport
         void VistCommitter(CommitterNode dataNode);
         void VistBlob(BlobNode dataNode);
         void VistAuthor(AuthorNode dataNode);
-        void VistMarkReference(MarkReferenceNode dataNode);
+        void VistMarkReference<T>(MarkReferenceNode<T> dataNode) where T: IMarkNode;
     }
 }

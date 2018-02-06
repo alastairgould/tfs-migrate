@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate", "TfsMigrate\TfsMigrate.csproj", "{5CDD56EE-3C19-4568-9D98-3B83A0AF1D18}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Core", "TfsMigrate.Core\TfsMigrate.Core.csproj", "{5E7A35D6-1FA5-42C3-BD42-2B1315E3A126}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Core.Tests", "TfsMigrate.Core.Tests\TfsMigrate.Core.Tests.csproj", "{F3931BFF-22B1-41BA-A134-F5EC3227E6D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5E7A35D6-1FA5-42C3-BD42-2B1315E3A126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E7A35D6-1FA5-42C3-BD42-2B1315E3A126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E7A35D6-1FA5-42C3-BD42-2B1315E3A126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3931BFF-22B1-41BA-A134-F5EC3227E6D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3931BFF-22B1-41BA-A134-F5EC3227E6D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3931BFF-22B1-41BA-A134-F5EC3227E6D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3931BFF-22B1-41BA-A134-F5EC3227E6D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

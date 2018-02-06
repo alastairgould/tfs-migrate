@@ -6,16 +6,19 @@ using System.Linq;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using TfsMigrate.Core.CommitTree;
 
-namespace TfsMigrate.Core.Tfs
+namespace TfsMigrate.Core.Importer
 {
-    public class TfsCommitTreeGenerator : ICreateCommitTree
+    public class TfsCreateCommitTree
     {
         private List<IFileNode> fileNodes = new List<IFileNode>();
+
         private List<CommitNode> merges = new List<CommitNode>();
+
         private string branch = null;
 
         // 10,000,000 to get it out of way of normal checkins
         private static int _MarkID = 10000001;
+
         private BlobNode GetDataBlob(Item item)
         {
             var bytes = new byte[item.ContentLength];
@@ -91,7 +94,7 @@ namespace TfsMigrate.Core.Tfs
 
             if (!adName.Contains('\\'))
                 return adName;
- 
+
 
             var split = adName.Split('\\');
             return split[1];
@@ -179,7 +182,7 @@ namespace TfsMigrate.Core.Tfs
                 }
 
                 var blob = GetDataBlob(change.Item);
-                fileNodes.Add(new FileModifyNode(path, new MarkReferenceNode(blob)));
+                fileNodes.Add(new FileModifyNode(path, new MarkReferenceNode<BlobNode>(blob)));
 
                 if ((change.ChangeType & ChangeType.Branch) == ChangeType.Branch)
                 {
@@ -215,8 +218,8 @@ namespace TfsMigrate.Core.Tfs
                 committer: committer,
                 author: author,
                 commitInfo: new DataNode(changeSet.Comment),
-                fromCommit: reference.Item2 != null ? new MarkReferenceNode(reference.Item2) : null,
-                mergeCommits: merges.Select(mergeCommit => new MarkReferenceNode(mergeCommit)).ToList(),
+                fromCommit: reference.Item2 != null ? new MarkReferenceNode<CommitNode>(reference.Item2) : null,
+                mergeCommits: merges.Select(mergeCommit => new MarkReferenceNode<CommitNode>(mergeCommit)).ToList(),
                 fileNodes: fileNodes);
 
             if (deleteBranch)
