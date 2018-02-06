@@ -1,12 +1,13 @@
-﻿using TfsMigrate.Core.CommitTree.Traverse;
+﻿using TfsMigrate.Core.CommitTree.NodeTypes;
+using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class FileRenameNode : IFileNode
     {
-        public string Path { get; private set; }
+        public string Path { get; }
 
-        public string Source { get; private set; }
+        public string Source { get; }
 
         public FileRenameNode(string src, string dest)
         {
@@ -14,7 +15,7 @@ namespace TfsMigrate.Core.CommitTree
             this.Path = dest;
         }
 
-        public void Vist(ITraverseCommitTree vistor)
+        public void AcceptVisitor(ITraverseCommitTree vistor)
         {
             vistor.VistFileRename(this);
         }

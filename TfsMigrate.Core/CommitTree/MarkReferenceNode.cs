@@ -1,12 +1,13 @@
-﻿using TfsMigrate.Core.CommitTree.Traverse;
+﻿using TfsMigrate.Core.CommitTree.NodeTypes;
+using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class MarkReferenceNode<T> : INode where T: IMarkNode
     {
-        public int? MarkId { get { return MarkNode.MarkId; } }
+        public int? MarkId => MarkNode.MarkId;
 
-        public bool HasBeenRendered { get { return MarkNode.HasBeenRendered; } }
+        public bool HasBeenRendered => MarkNode.HasBeenRendered;
 
         public T MarkNode { get; set;}
 
@@ -15,7 +16,7 @@ namespace TfsMigrate.Core.CommitTree
             MarkNode = markNode;
         }
 
-        public void Vist(ITraverseCommitTree vistor)
+        public void AcceptVisitor(ITraverseCommitTree vistor)
         {
             vistor.VistMarkReference(this);
         }

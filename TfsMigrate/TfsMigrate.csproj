@@ -231,6 +231,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TfsMigrate.Contracts\TfsMigrate.Contracts.csproj">
+      <Project>{19FF0D05-EE95-4EF9-A957-0344D7439EF0}</Project>
+      <Name>TfsMigrate.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TfsMigrate.Core\TfsMigrate.Core.csproj">
       <Project>{5e7a35d6-1fa5-42c3-bd42-2b1315e3a126}</Project>
       <Name>TfsMigrate.Core</Name>

@@ -1,17 +1,18 @@
-﻿using TfsMigrate.Core.CommitTree.Traverse;
+﻿using TfsMigrate.Core.CommitTree.NodeTypes;
+using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class FileDeleteAllNode : IFileNode
     {
-        public string Path { get; private set; } 
+        public string Path { get; } 
 
         public FileDeleteAllNode()
         {
             this.Path = null;
         }
 
-        public void Vist(ITraverseCommitTree vistor)
+        public void AcceptVisitor(ITraverseCommitTree vistor)
         {
             vistor.VistDeleteAll(this);
         }

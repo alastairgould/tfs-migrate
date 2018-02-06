@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TfsMigrate.Core.CommitTree.NodeTypes;
 using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class CommitNode : IMarkNode
     {
-        public string Reference { get; private set; }
+        public string Reference { get; }
 
-        public AuthorNode Author { get; private set; }
+        public AuthorNode Author { get; }
 
-        public CommitterNode Committer { get; private set; }
+        public CommitterNode Committer { get; }
 
-        public DataNode CommitInfo { get; private set; }
+        public DataNode CommitInfo { get; }
 
-        public MarkReferenceNode<CommitNode> FromCommit { get; private set; }
+        public MarkReferenceNode<CommitNode> FromCommit { get; }
 
-        public IList<MarkReferenceNode<CommitNode>> MergeCommits { get; private set; }
+        public IList<MarkReferenceNode<CommitNode>> MergeCommits { get; }
 
-        public IList<IFileNode> FileNodes { get; private set; }
+        public IList<IFileNode> FileNodes { get; }
 
-        public int? MarkId { get; private set; }
+        public int? MarkId { get; }
 
         public bool HasBeenRendered { get; set; }
 
@@ -52,7 +53,7 @@ namespace TfsMigrate.Core.CommitTree
             this.FileNodes = (fileNodes ?? new List<IFileNode>()).ToList().AsReadOnly();
         }
 
-        public void Vist(ITraverseCommitTree vistor)
+        public void AcceptVisitor(ITraverseCommitTree vistor)
         {
             vistor.VistCommit(this);
         }

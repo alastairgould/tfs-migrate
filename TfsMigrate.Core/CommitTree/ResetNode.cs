@@ -1,12 +1,13 @@
-﻿using TfsMigrate.Core.CommitTree.Traverse;
+﻿using TfsMigrate.Core.CommitTree.NodeTypes;
+using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class ResetNode : INode
     {
-        public string Reference { get; private set; }
+        public string Reference { get; }
 
-        public MarkReferenceNode<CommitNode> From { get; private set; }
+        public MarkReferenceNode<CommitNode> From { get; }
 
         public ResetNode(string reference, MarkReferenceNode<CommitNode> from)
         {
@@ -14,7 +15,7 @@ namespace TfsMigrate.Core.CommitTree
             this.From = from;
         }
 
-        public void Vist(ITraverseCommitTree vistor)
+        public void AcceptVisitor(ITraverseCommitTree vistor)
         {
             vistor.VistReset(this);
         }

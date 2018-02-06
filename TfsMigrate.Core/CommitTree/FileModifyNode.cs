@@ -1,14 +1,15 @@
-﻿using TfsMigrate.Core.CommitTree.Traverse;
+﻿using TfsMigrate.Core.CommitTree.NodeTypes;
+using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class FileModifyNode : IFileNode
     {
-        public string Path { get; private set; }
+        public string Path { get; }
 
-        public MarkReferenceNode<BlobNode> Blob { get; private set; }
+        public MarkReferenceNode<BlobNode> Blob { get; }
 
-        public DataNode Data { get; private set; }
+        public DataNode Data { get; }
 
         public FileModifyNode(string path, MarkReferenceNode<BlobNode> blob)
         {
@@ -22,7 +23,7 @@ namespace TfsMigrate.Core.CommitTree
             this.Data = new DataNode(data);
         }
 
-        public void Vist(ITraverseCommitTree vistor)
+        public void AcceptVisitor(ITraverseCommitTree vistor)
         {
             vistor.VistFileModify(this);
         }

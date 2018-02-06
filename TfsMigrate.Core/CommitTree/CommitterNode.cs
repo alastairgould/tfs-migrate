@@ -1,4 +1,5 @@
 ﻿using System;
+using TfsMigrate.Core.CommitTree.NodeTypes;
 using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
@@ -7,11 +8,11 @@ namespace TfsMigrate.Core.CommitTree
     {
         public string NodeName => "committer";
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public string Email { get; private set; }
+        public string Email { get; }
 
-        public DateTimeOffset Date { get; private set; }
+        public DateTimeOffset Date { get; }
 
         public CommitterNode(string name, string email, DateTimeOffset date)
         {
@@ -20,7 +21,7 @@ namespace TfsMigrate.Core.CommitTree
             this.Date = date;
         }
 
-        public void Vist(ITraverseCommitTree vistor)
+        public void AcceptVisitor(ITraverseCommitTree vistor)
         {
             vistor.VistCommitter(this);
         }

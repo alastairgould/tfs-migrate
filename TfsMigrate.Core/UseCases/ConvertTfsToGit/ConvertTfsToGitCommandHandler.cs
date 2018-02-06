@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -23,18 +24,38 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
             var validator = new ConvertTfsToGitCommandValidation();
             var validationResults = validator.Validate(convertTfsToGitCommand);
 
-            var changeSets = retriveChangeSets.RetriveChangeSets(convertTfsToGitCommand.TfsProjectCollection, convertTfsToGitCommand.TfsPath);
             var branches = new Dictionary<string, Tuple<string, CommitNode>>();
 
             using (GitStreamWriter writer = new GitStreamWriter(convertTfsToGitCommand.RepositoryDirectory))
             {
-                foreach (var changeSet in changeSets)
+                bool shouldSkipFirstCommit = false;
+
+                foreach(var reposistory in convertTfsToGitCommand.Repositories)
                 {
-                    ConvertChangeSet(branches, changeSet, writer);
+                    ConvertRepository(branches, writer, reposistory, shouldSkipFirstCommit);
+                    shouldSkipFirstCommit = true;
                 }
             }
 
             return Task.CompletedTask;
+        }
+
+        private void ConvertRepository(Dictionary<string, Tuple<string, CommitNode>> branches,
+            GitStreamWriter writer,
+            Contracts.TfsRepository reposistory,
+            bool shouldSkipFirstCommit)
+        {
+            var changeSets = retriveChangeSets.RetriveChangeSets(reposistory.ProjectCollection, reposistory.Path);
+
+            if(shouldSkipFirstCommit)
+            {
+                changeSets = changeSets.Skip(1);
+            }
+
+            foreach (var changeSet in changeSets)
+            {
+                ConvertChangeSet(branches, changeSet, writer);
+            }
         }
 
         private void ConvertChangeSet(Dictionary<string, Tuple<string, CommitNode>> branches, 
