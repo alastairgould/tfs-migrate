@@ -5,21 +5,47 @@ namespace TfsMigrate.Core.Exporter
 {
     public class GitStreamWriter : StreamWriter
     {
-        public GitStreamWriter(string path) : base(CreateGitFastImportStream(path))
+        private readonly Process process;
+
+        private bool disposed = false;
+
+        public GitStreamWriter(Process process) : base(process.StandardInput.BaseStream)
         {
+            this.process = process;
             NewLine = "\n";
             AutoFlush = true;
         }
 
-        private static Stream CreateGitFastImportStream(string outputPath)
+        protected override void Dispose(bool disposing)
         {
-            System.IO.Directory.CreateDirectory(outputPath);
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                process.Dispose();
+            }
+
+            disposed = true;
+            base.Dispose(disposing);
+        }
+
+        public static GitStreamWriter CreateGitStreamWriter(string repositoryPath)
+        {
+            return new GitStreamWriter(CreateGitFastImportProcess(repositoryPath));
+        }
+
+        private static Process CreateGitFastImportProcess(string repositoryPath)
+        {
+            Directory.CreateDirectory(repositoryPath);
 
             ProcessStartInfo processStartInfo = new ProcessStartInfo("cmd.exe");
             processStartInfo.RedirectStandardInput = true;
             processStartInfo.RedirectStandardOutput = true;
             processStartInfo.UseShellExecute = false;
-            processStartInfo.WorkingDirectory = outputPath;
+            processStartInfo.WorkingDirectory = repositoryPath;
 
             Process process = Process.Start(processStartInfo);
 
@@ -29,7 +55,7 @@ namespace TfsMigrate.Core.Exporter
                 process.StandardInput.WriteLine("git fast-import");
             }
 
-            return process.StandardInput.BaseStream;
+            return process;
         }
     }
 }

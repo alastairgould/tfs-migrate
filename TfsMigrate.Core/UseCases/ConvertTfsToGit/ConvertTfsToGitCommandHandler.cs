@@ -4,19 +4,24 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.TeamFoundation.VersionControl.Client;
+using TfsMigrate.Contracts;
 using TfsMigrate.Core.CommitTree;
 using TfsMigrate.Core.Exporter;
 using TfsMigrate.Core.Importer;
+using TfsMigrate.Core.UseCases.ConvertTfsToGit.Events;
 
 namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 {
     public class ConvertTfsToGitCommandHandler : IRequestHandler<ConvertTfsToGitCommand>
     {
         private readonly IRetriveChangeSets retriveChangeSets;
+        private readonly IMediator mediator;
 
-        public ConvertTfsToGitCommandHandler(IRetriveChangeSets retriveChangeSets)
+        public ConvertTfsToGitCommandHandler(IRetriveChangeSets retriveChangeSets, IMediator mediator)
         {
             this.retriveChangeSets = retriveChangeSets;
+            this.mediator = mediator;
         }
 
         public Task Handle(ConvertTfsToGitCommand convertTfsToGitCommand, CancellationToken cancellationToken)
@@ -26,11 +31,11 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
             var branches = new Dictionary<string, Tuple<string, CommitNode>>();
 
-            using (GitStreamWriter writer = new GitStreamWriter(convertTfsToGitCommand.RepositoryDirectory))
+            using (GitStreamWriter writer = GitStreamWriter.CreateGitStreamWriter(convertTfsToGitCommand.RepositoryDirectory))
             {
                 bool shouldSkipFirstCommit = false;
 
-                foreach(var reposistory in convertTfsToGitCommand.Repositories)
+                foreach (var reposistory in convertTfsToGitCommand.Repositories)
                 {
                     ConvertRepository(branches, writer, reposistory, shouldSkipFirstCommit);
                     shouldSkipFirstCommit = true;
@@ -42,24 +47,26 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
         private void ConvertRepository(Dictionary<string, Tuple<string, CommitNode>> branches,
             GitStreamWriter writer,
-            Contracts.TfsRepository reposistory,
+            TfsRepository reposistory,
             bool shouldSkipFirstCommit)
         {
             var changeSets = retriveChangeSets.RetriveChangeSets(reposistory.ProjectCollection, reposistory.Path);
+            var amountToProccess = changeSets.Count();
 
             if(shouldSkipFirstCommit)
             {
                 changeSets = changeSets.Skip(1);
             }
 
-            foreach (var changeSet in changeSets)
+            foreach (var changeSetAndIndex in changeSets.Select((value, i) => new { CurrentIndex = i, ChangeSet = value }))
             {
-                ConvertChangeSet(branches, changeSet, writer);
+                ProgressNotification(changeSetAndIndex.CurrentIndex, amountToProccess, changeSetAndIndex.ChangeSet);
+                ConvertChangeSet(branches, changeSetAndIndex.ChangeSet, writer);
             }
         }
 
-        private void ConvertChangeSet(Dictionary<string, Tuple<string, CommitNode>> branches, 
-            Microsoft.TeamFoundation.VersionControl.Client.Changeset changeSet,
+        private void ConvertChangeSet(Dictionary<string, Tuple<string, CommitNode>> branches,
+            Changeset changeSet,
             GitStreamWriter stream)
         {
             var commitTreeGenerator = new TfsCreateCommitTree();
@@ -67,6 +74,16 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
             var gitFastExport = new GitFastImport(stream);
             gitFastExport.ProccessCommit(commitTree);
+        }
+
+        private void ProgressNotification(int currentAmount, int amountToProccess, Changeset changeSet)
+        {
+            var currentCommit = new CurrentCommit(changeSet.ChangesetId, changeSet.Comment);
+
+            mediator.Publish(new ProgressNotification(
+                currentAmount,
+                amountToProccess,
+                currentCommit));
         }
     }
 }
