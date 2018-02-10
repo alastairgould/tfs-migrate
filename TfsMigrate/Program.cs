@@ -3,6 +3,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Features.Variance;
 using MediatR;
+using TfsMigrate.Contracts;
 using TfsMigrate.Core.UseCases.ConvertTfsToGit;
 
 namespace TfsMigrate
@@ -13,8 +14,16 @@ namespace TfsMigrate
         {
             var mediatr = SetupMediator();
 
-            mediatr.Send(new ConvertTfsToGitCommand(new System.Uri(""),
-                "",
+            var repos = new List<TfsRepository>()
+            {
+                new TfsRepository()
+                {
+                    ProjectCollection = new System.Uri(""),
+                    Path = ""
+                }
+            };
+
+            mediatr.Send(new ConvertTfsToGitCommand(repos,
                 @""));
         }
 

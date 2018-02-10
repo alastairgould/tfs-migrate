@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using TfsMigrate.Core.CommitTree;
+using TfsMigrate.Core.CommitTree.NodeTypes;
 using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.Exporter
@@ -16,7 +17,7 @@ namespace TfsMigrate.Core.Exporter
 
         public void ProccessCommit(CommitNode commit)
         {
-            commit.Vist(this);
+            commit.AcceptVisitor(this);
         }
 
         public void VistReset(ResetNode resetNode)
@@ -26,14 +27,14 @@ namespace TfsMigrate.Core.Exporter
             if (resetNode.From != null)
             {
                 writer.Write("from ");
-                resetNode.From.Vist(this);
+                resetNode.From.AcceptVisitor(this);
                 writer.WriteLine();
             }
         }
 
         public void VistFileRename(FileRenameNode fileRenameNode)
         {
-            writer.WriteLine(string.Format("C {0} {1}", fileRenameNode.Source, fileRenameNode.Path));
+            writer.WriteLine(string.Format("C \"{0}\" \"{1}\"", fileRenameNode.Source, fileRenameNode.Path));
         }
 
         public void VistFileModify(FileModifyNode fileModifyNode)
@@ -41,14 +42,14 @@ namespace TfsMigrate.Core.Exporter
             if (fileModifyNode.Blob != null)
             {
                 writer.Write("M 644 ");
-                fileModifyNode.Blob.Vist(this);
-                writer.Write(" " + fileModifyNode.Path);
+                fileModifyNode.Blob.AcceptVisitor(this);
+                writer.Write(" " + "\"" + fileModifyNode.Path + "\"");
                 writer.WriteLine();
             }
             else
             {
-                writer.WriteLine(string.Format("M 644 inline {0}", fileModifyNode.Path));
-                fileModifyNode.Data.Vist(this);
+                writer.WriteLine(string.Format("M 644 inline \"{0}\"", fileModifyNode.Path));
+                fileModifyNode.Data.AcceptVisitor(this);
             }
         }
 
@@ -62,7 +63,7 @@ namespace TfsMigrate.Core.Exporter
 
         public void VistFileDelete(FileDeleteNode dataNode)
         {
-            writer.WriteLine(string.Format("D {0}", dataNode.Path));
+            writer.WriteLine(string.Format("D \"{0}\"", dataNode.Path));
         }
 
         public void VistDeleteAll(FileDeleteAllNode dataNode)
@@ -72,7 +73,7 @@ namespace TfsMigrate.Core.Exporter
 
         public void VistFileCopy(FileCopyNode dataNode)
         {
-            writer.WriteLine(string.Format("C {0} {1}", dataNode.Source, dataNode.Path));
+            writer.WriteLine(string.Format("C \"{0}\" \"{1}\"", dataNode.Source, dataNode.Path));
         }
 
         public void VistCommitter(CommitterNode dataNode)
@@ -96,7 +97,7 @@ namespace TfsMigrate.Core.Exporter
             {
                 if (fc.Blob != null)
                 {
-                    fc.Blob.MarkNode.Vist(this);
+                    fc.Blob.MarkNode.AcceptVisitor(this);
                 }
             }
 
@@ -111,29 +112,29 @@ namespace TfsMigrate.Core.Exporter
 
             if (dataNode.Author != null)
             {
-                dataNode.Author.Vist(this);
+                dataNode.Author.AcceptVisitor(this);
             }
 
-            dataNode.Committer.Vist(this);
-            dataNode.CommitInfo.Vist(this);
+            dataNode.Committer.AcceptVisitor(this);
+            dataNode.CommitInfo.AcceptVisitor(this);
 
             if (dataNode.FromCommit != null)
             {
                 writer.Write("from ");
-                dataNode.FromCommit.Vist(this);
+                dataNode.FromCommit.AcceptVisitor(this);
                 writer.WriteLine();
             }
 
             foreach (var mc in dataNode.MergeCommits)
             {
                 writer.Write("merge ");
-                mc.Vist(this);
+                mc.AcceptVisitor(this);
                 writer.WriteLine();
             }
 
             foreach (var fc in dataNode.FileNodes)
             {
-                fc.Vist(this);
+                fc.AcceptVisitor(this);
             }
 
             writer.WriteLine();
@@ -155,7 +156,7 @@ namespace TfsMigrate.Core.Exporter
                     dataNode.HasBeenRendered = true;
                 }
 
-                dataNode.DataNode.Vist(this);
+                dataNode.DataNode.AcceptVisitor(this);
             };
         }
 

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
+using Microsoft.TeamFoundation;
 using Microsoft.TeamFoundation.VersionControl.Client;
+using Polly;
 using TfsMigrate.Core.CommitTree;
+using TfsMigrate.Core.CommitTree.NodeTypes;
 
 namespace TfsMigrate.Core.Importer
 {
@@ -21,14 +24,22 @@ namespace TfsMigrate.Core.Importer
 
         private BlobNode GetDataBlob(Item item)
         {
-            var bytes = new byte[item.ContentLength];
-            var str = item.DownloadFile();
-            str.Read(bytes, 0, bytes.Length);
-            str.Close();
+            var policy = Policy
+                .Handle<VersionControlException>()
+                .Or<TeamFoundationServerUnauthorizedException>()
+                .Retry(5);
 
-            var id = _MarkID++;
-            var blob = BlobNode.BuildBlob(bytes, id);
-            return blob;
+            return policy.Execute(() =>
+            {
+                var bytes = new byte[item.ContentLength];
+                var str = item.DownloadFile();
+                str.Read(bytes, 0, bytes.Length);
+                str.Close();
+
+                var id = _MarkID++;
+                var blob = BlobNode.BuildBlob(bytes, id);
+                return blob;
+            });
         }
 
         private static BranchHistoryTreeItem FindMergedItem(BranchHistoryTreeItem parent, int changeSetId)

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TfsMigrate.Core.CommitTree
+namespace TfsMigrate.Core.CommitTree.NodeTypes
 {
     public interface INameNode : INode
     {

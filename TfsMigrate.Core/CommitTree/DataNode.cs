@@ -1,12 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text;
+using TfsMigrate.Core.CommitTree.NodeTypes;
 using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
 {
     public class DataNode : INode
     {
-        public ReadOnlyCollection<byte> Bytes { get { return new ReadOnlyCollection<byte>(this._Bytes); } }
+        public ReadOnlyCollection<byte> Bytes => new ReadOnlyCollection<byte>(this._Bytes);
 
         internal byte[] _Bytes;
 
@@ -20,7 +21,7 @@ namespace TfsMigrate.Core.CommitTree
             this._Bytes = Encoding.UTF8.GetBytes(str);
         }
 
-        public void Vist(ITraverseCommitTree vistor)
+        public void AcceptVisitor(ITraverseCommitTree vistor)
         {
             vistor.VistData(this);
         }

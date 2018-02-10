@@ -6,9 +6,8 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
     {
         public ConvertTfsToGitCommandValidation()
         {
-            RuleFor(command => command.TfsProjectCollection).NotNull();
-            RuleFor(command => command.TfsPath).NotNull();
-            RuleFor(command => command.TfsPath).NotNull();
+            RuleFor(command => command.Repositories).NotNull();
+            RuleFor(command => command.RepositoryDirectory).NotNull();
         }
     }
 }

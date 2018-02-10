@@ -1,4 +1,4 @@
-﻿namespace TfsMigrate.Core.CommitTree
+﻿namespace TfsMigrate.Core.CommitTree.NodeTypes
 {
     public interface IFileNode : INode
     {

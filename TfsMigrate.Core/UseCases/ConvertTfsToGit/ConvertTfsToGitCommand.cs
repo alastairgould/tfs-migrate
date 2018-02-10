@@ -1,20 +1,18 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using MediatR;
+using TfsMigrate.Contracts;
 
 namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 {
     public class ConvertTfsToGitCommand : IRequest
     {
-        public Uri TfsProjectCollection { get; }
-
-        public string TfsPath { get; }
+        public IEnumerable<TfsRepository> Repositories { get; }
         
         public string RepositoryDirectory { get; }
 
-        public ConvertTfsToGitCommand(Uri tfsProjectCollection, string tfsPath, string outputDirectory)
+        public ConvertTfsToGitCommand(IEnumerable<TfsRepository> repositories, string outputDirectory)
         {
-            TfsProjectCollection = tfsProjectCollection;
-            TfsPath = tfsPath;
+            Repositories = repositories;
             RepositoryDirectory = outputDirectory;
         }
     }

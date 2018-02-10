@@ -13,6 +13,8 @@ namespace TfsMigrate.Core.Exporter
 
         private static Stream CreateGitFastImportStream(string outputPath)
         {
+            return File.Create(@"C:\Users\alastair.gould\Documents\output2.export");
+
             System.IO.Directory.CreateDirectory(outputPath);
 
             ProcessStartInfo processStartInfo = new ProcessStartInfo("cmd.exe");

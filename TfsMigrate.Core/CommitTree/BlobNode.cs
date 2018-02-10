@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using TfsMigrate.Core.CommitTree.NodeTypes;
 using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
@@ -47,11 +48,11 @@ namespace TfsMigrate.Core.CommitTree
 
         public bool IsRendered { get; set; }
 
-        public DataNode DataNode { get; private set; }
+        public DataNode DataNode { get; }
 
         public string Filename { get; private set; }
 
-        public int? MarkId { get; private set; }
+        public int? MarkId { get; }
 
         public bool HasBeenRendered { get; set; }
 
@@ -65,7 +66,7 @@ namespace TfsMigrate.Core.CommitTree
         private BlobNode(byte[] data, int? markId)
             : this(new DataNode(data), markId) { }
 
-        public void Vist(ITraverseCommitTree vistor)
+        public void AcceptVisitor(ITraverseCommitTree vistor)
         {
             vistor.VistBlob(this);
         }

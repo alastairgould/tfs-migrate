@@ -1,4 +1,6 @@
-﻿namespace TfsMigrate.Core.CommitTree.Traverse
+﻿using TfsMigrate.Core.CommitTree.NodeTypes;
+
+namespace TfsMigrate.Core.CommitTree.Traverse
 {
     public interface ITraverseCommitTree
     {
