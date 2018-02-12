@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TfsMigrate.Contracts")]
+[assembly: AssemblyTitle("TfsMigrate.Powershell")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TfsMigrate.Contracts")]
+[assembly: AssemblyProduct("TfsMigrate.Powershell")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("19ff0d05-ee95-4ef9-a957-0344d7439ef0")]
+[assembly: Guid("7569a599-1152-43a5-9e8f-8bb23e706056")]
 
 // Version information for an assembly consists of the following four values:
 //

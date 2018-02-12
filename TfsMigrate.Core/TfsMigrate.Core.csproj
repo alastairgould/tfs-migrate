@@ -250,6 +250,7 @@
     <Compile Include="UseCases\ConvertTfsToGit\ConvertTfsToGitCommand.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\ConvertTfsToGitCommandHandler.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\ConvertTfsToGitCommandValidation.cs" />
+    <Compile Include="UseCases\ConvertTfsToGit\Events\ProgressNotification.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
