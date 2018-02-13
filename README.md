@@ -21,13 +21,18 @@
 ### Simple Tfs to Git Conversion
 
 ```powershell
-
 Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folder in tfs repo] 
 | Convert-ToGit -LocalRepositoryPath [local path to where the new git repo will be stored] 
 
 ```
 
 ### Fix Split Histories
+
+```powershell
+Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folder in tfs repo] 
+| Convert-ToGit -LocalRepositoryPath [local path to where the new git repo will be stored] 
+| Convert-ToGit -LocalRepositoryPath [local path to where the new git repo will be stored] 
+```
 
 ### Import into VSTS GIT Repository
 
