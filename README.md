@@ -7,3 +7,5 @@
 ### Get-TfsRepository
 
 ### Convert-ToGit
+
+### Import-WorkItemAssociations
