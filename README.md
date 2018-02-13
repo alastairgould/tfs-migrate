@@ -17,7 +17,7 @@
 
 ### Convert-ToGit
 
-### Set-Master
+### Set-MasterBranch
 
 ### Import-VstsRepository
 
