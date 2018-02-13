@@ -2,6 +2,11 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/97r3hxl15qufel9u?svg=true)](https://ci.appveyor.com/project/alastairgould/tfs-migrate)
 
+Tfs Migrate is a set tools which helps you migrate from Tfs To Git. Although it can be used to create just plain GIT repositories, 
+it is especially suited for migrating to VSTS hosted GIT. When used with VSTS it will let you reassociate your work items to the new Git commits.
+
+It transfer your entire history of of the selected repositories and branches.
+
 ## How to Install
 
 ### Prerequisites
