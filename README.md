@@ -22,6 +22,6 @@
 
 ### Fix Split Histories
 
-### Import into VSTS Repository
+### Import into VSTS GIT Repository
 
-### Import into VSTS Repository and Work Item Reassociation
+### Import into VSTS GIT Repository and Work Item Reassociation
