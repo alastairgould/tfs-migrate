@@ -11,8 +11,8 @@ namespace TfsMigrate.Core.CommitTree
 
         public ResetNode(string reference, MarkReferenceNode<CommitNode> from)
         {
-            this.Reference = reference;
-            this.From = from;
+            Reference = reference;
+            From = from;
         }
 
         public void AcceptVisitor(ITraverseCommitTree vistor)

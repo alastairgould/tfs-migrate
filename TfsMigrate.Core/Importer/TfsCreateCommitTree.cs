@@ -13,14 +13,14 @@ namespace TfsMigrate.Core.Importer
 {
     public class TfsCreateCommitTree
     {
-        private List<IFileNode> fileNodes = new List<IFileNode>();
+        private readonly List<IFileNode> _fileNodes = new List<IFileNode>();
 
-        private List<CommitNode> merges = new List<CommitNode>();
+        private readonly List<CommitNode> _merges = new List<CommitNode>();
 
-        private string branch = null;
+        private string _branch;
 
         // 10,000,000 to get it out of way of normal checkins
-        private static int _MarkID = 10000001;
+        private static int _markId = 10000001;
 
         private BlobNode GetDataBlob(Item item)
         {
@@ -36,7 +36,7 @@ namespace TfsMigrate.Core.Importer
                 str.Read(bytes, 0, bytes.Length);
                 str.Close();
 
-                var id = _MarkID++;
+                var id = _markId++;
                 var blob = BlobNode.BuildBlob(bytes, id);
                 return blob;
             });
@@ -66,7 +66,7 @@ namespace TfsMigrate.Core.Importer
 
         private string GetPath(string serverPath, Dictionary<string, Tuple<string, CommitNode>> branches)
         {
-            if (branch == null)
+            if (_branch == null)
             {
                 var branchInfo = GetBranch(serverPath, branches);
                 if (branchInfo == null)
@@ -75,30 +75,30 @@ namespace TfsMigrate.Core.Importer
                     return "";
                 }
                 else
-                    branch = branchInfo.Item1;
+                    _branch = branchInfo.Item1;
             }
 
-            if (!serverPath.StartsWith(branch))
+            if (!serverPath.StartsWith(_branch))
                 // for now ignore secondary branches and hope that other filemodify Nodes work this stuff out
                 return null;
 
-            return serverPath.Replace(branch, "");
+            return serverPath.Replace(_branch, "");
         }
 
         private void CreateNewBranch(string serverPath, Dictionary<string, Tuple<string, CommitNode>> branches)
         {
             // Assumes that main directory for branch is the first thing added in new branch
-            branch = serverPath + "/";
+            _branch = serverPath + "/";
 
-            if (!branches.ContainsKey(branch))
+            if (!branches.ContainsKey(_branch))
             {
-                branches[branch] = Tuple.Create($"refs/heads/{Path.GetFileName(serverPath)}", default(CommitNode));
-                fileNodes.Add(new FileDeleteAllNode());
+                branches[_branch] = Tuple.Create($"refs/heads/{Path.GetFileName(serverPath)}", default(CommitNode));
+                _fileNodes.Add(new FileDeleteAllNode());
             }
         }
 
         #region Active Directory
-        private static string ProcessADName(string adName)
+        private static string ProcessAdName(string adName)
         {
             if (string.IsNullOrEmpty(adName))
                 return "";
@@ -152,7 +152,7 @@ namespace TfsMigrate.Core.Importer
                 // an entire subdir w/ one Node instead of file by file
                 if ((change.ChangeType & ChangeType.Delete) == ChangeType.Delete)
                 {
-                    fileNodes.Add(new FileDeleteNode(path));
+                    _fileNodes.Add(new FileDeleteNode(path));
                     if (path == "")
                     {
                         deleteBranch = true;
@@ -186,14 +186,14 @@ namespace TfsMigrate.Core.Importer
                     var previousChangeset = history[1];
                     var previousFile = previousChangeset.Changes[0];
                     var previousPath = GetPath(previousFile.Item.ServerItem, branches);
-                    fileNodes.Add(new FileRenameNode(previousPath, path));
+                    _fileNodes.Add(new FileRenameNode(previousPath, path));
 
                     // remove delete Nodes, since rename will take care of biz
-                    fileNodes.RemoveAll(fc => fc is FileDeleteNode && fc.Path == previousPath);
+                    _fileNodes.RemoveAll(fc => fc is FileDeleteNode && fc.Path == previousPath);
                 }
 
                 var blob = GetDataBlob(change.Item);
-                fileNodes.Add(new FileModifyNode(path, new MarkReferenceNode<BlobNode>(blob)));
+                _fileNodes.Add(new FileModifyNode(path, new MarkReferenceNode<BlobNode>(blob)));
 
                 if ((change.ChangeType & ChangeType.Branch) == ChangeType.Branch)
                 {
@@ -204,8 +204,8 @@ namespace TfsMigrate.Core.Importer
                     var mergedItem = FindMergedItem(itemHistory, changeSet.ChangesetId);
                     var branchInfo = GetBranch(mergedItem.Relative.BranchFromItem.ServerItem, branches).Item2;
                     var previousCommit = branchInfo.Item2;
-                    if (!merges.Contains(previousCommit))
-                        merges.Add(previousCommit);
+                    if (!_merges.Contains(previousCommit))
+                        _merges.Add(previousCommit);
                 }
 
                 if ((change.ChangeType & ChangeType.Merge) == ChangeType.Merge)
@@ -216,13 +216,13 @@ namespace TfsMigrate.Core.Importer
                     {
                         var branchInfo = GetBranch(mh.SourceItem.Item.ServerItem, branches).Item2;
                         var previousCommit = branchInfo.Item2;
-                        if (!merges.Contains(previousCommit))
-                            merges.Add(previousCommit);
+                        if (!_merges.Contains(previousCommit))
+                            _merges.Add(previousCommit);
                     }
                 }
             }
 
-            var reference = branches[branch];
+            var reference = branches[_branch];
             var commit = new CommitNode(
                 markId: changeSet.ChangesetId,
                 reference: reference.Item1,
@@ -230,13 +230,13 @@ namespace TfsMigrate.Core.Importer
                 author: author,
                 commitInfo: new DataNode(changeSet.Comment),
                 fromCommit: reference.Item2 != null ? new MarkReferenceNode<CommitNode>(reference.Item2) : null,
-                mergeCommits: merges.Select(mergeCommit => new MarkReferenceNode<CommitNode>(mergeCommit)).ToList(),
-                fileNodes: fileNodes);
+                mergeCommits: _merges.Select(mergeCommit => new MarkReferenceNode<CommitNode>(mergeCommit)).ToList(),
+                fileNodes: _fileNodes);
 
             if (deleteBranch)
-                branches.Remove(branch);
+                branches.Remove(_branch);
             else
-                branches[branch] = Tuple.Create(reference.Item1, commit);
+                branches[_branch] = Tuple.Create(reference.Item1, commit);
 
             return commit;
         }

@@ -15,13 +15,13 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 {
     public class ConvertTfsToGitCommandHandler : IRequestHandler<ConvertTfsToGitCommand>
     {
-        private readonly IRetriveChangeSets retriveChangeSets;
-        private readonly IMediator mediator;
+        private readonly IRetriveChangeSets _retriveChangeSets;
+        private readonly IMediator _mediator;
 
         public ConvertTfsToGitCommandHandler(IRetriveChangeSets retriveChangeSets, IMediator mediator)
         {
-            this.retriveChangeSets = retriveChangeSets;
-            this.mediator = mediator;
+            _retriveChangeSets = retriveChangeSets;
+            _mediator = mediator;
         }
 
         public Task Handle(ConvertTfsToGitCommand convertTfsToGitCommand, CancellationToken cancellationToken)
@@ -31,9 +31,9 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
             var branches = new Dictionary<string, Tuple<string, CommitNode>>();
 
-            using (GitStreamWriter writer = GitStreamWriter.CreateGitStreamWriter(convertTfsToGitCommand.RepositoryDirectory))
+            using (var writer = GitStreamWriter.CreateGitStreamWriter(convertTfsToGitCommand.RepositoryDirectory))
             {
-                bool shouldSkipFirstCommit = false;
+                var shouldSkipFirstCommit = false;
 
                 foreach (var reposistory in convertTfsToGitCommand.Repositories)
                 {
@@ -50,7 +50,7 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
             TfsRepository reposistory,
             bool shouldSkipFirstCommit)
         {
-            var changeSets = retriveChangeSets.RetriveChangeSets(reposistory.ProjectCollection, reposistory.Path);
+            var changeSets = _retriveChangeSets.RetriveChangeSets(reposistory.ProjectCollection, reposistory.Path);
             var amountToProccess = changeSets.Count();
 
             if(shouldSkipFirstCommit)
@@ -80,7 +80,7 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
         {
             var currentCommit = new CurrentCommit(changeSet.ChangesetId, changeSet.Comment);
 
-            mediator.Publish(new ProgressNotification(
+            _mediator.Publish(new ProgressNotification(
                 currentAmount,
                 amountToProccess,
                 currentCommit));

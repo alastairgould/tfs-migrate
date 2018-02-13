@@ -13,35 +13,35 @@ namespace TfsMigrate.Core.CommitTree
             public bool Equals(byte[] x, byte[] y)
             {
                 if (x.Length != y.Length) return false;
-                for (int ix = 0; ix < x.Length; ++ix)
+                for (var ix = 0; ix < x.Length; ++ix)
                     if (x[ix] != y[ix]) return false;
                 return true;
             }
             public int GetHashCode(byte[] obj)
             {
-                int retval = 0;
-                foreach (byte value in obj) retval = (retval << 6) ^ value;
+                var retval = 0;
+                foreach (var value in obj) retval = (retval << 6) ^ value;
                 return retval;
             }
         }
 
-        private static Dictionary<byte[], BlobNode> _DataBlobs = new Dictionary<byte[], BlobNode>(new ByteComparer());
+        private static readonly Dictionary<byte[], BlobNode> _dataBlobs = new Dictionary<byte[], BlobNode>(new ByteComparer());
 
         public static BlobNode BuildBlob(byte[] data, int? markId)
         {
             var hasher = SHA1.Create();
             var hash = hasher.ComputeHash(data);
-            if (_DataBlobs.ContainsKey(hash))
+            if (_dataBlobs.ContainsKey(hash))
             {
-                var blob = _DataBlobs[hash];
-                if (blob.DataNode._Bytes.Length != data.Length)
+                var blob = _dataBlobs[hash];
+                if (blob.DataNode.Bytes.Length != data.Length)
                     throw new InvalidOperationException("There are two matching hashes, but the data are of two different lengths.");
                 return blob;
             }
             else
             {
                 var blob = new BlobNode(data, markId);
-                _DataBlobs[hash] = blob;
+                _dataBlobs[hash] = blob;
                 return blob;
             }
         }
@@ -58,9 +58,9 @@ namespace TfsMigrate.Core.CommitTree
 
         private BlobNode(DataNode data, int? markId)
         {
-            this.DataNode = data;
-            this.MarkId = markId;
-            this.IsRendered = false;
+            DataNode = data;
+            MarkId = markId;
+            IsRendered = false;
         }
 
         private BlobNode(byte[] data, int? markId)

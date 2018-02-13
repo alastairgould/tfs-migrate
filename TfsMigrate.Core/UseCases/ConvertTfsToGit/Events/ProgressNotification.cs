@@ -16,10 +16,10 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit.Events
 
         public ProgressNotification(int currentAmount, int amountToProccess, CurrentCommit currentCommit)
         {
-            this.PercentComplete = (int)Math.Round(((double)currentAmount / (double)amountToProccess) * 100d);
-            this.CurrentCommit = currentCommit;
-            this.CurrentAmount = currentAmount;
-            this.AmountToProccess = amountToProccess;
+            PercentComplete = (int)Math.Round(((double)currentAmount / (double)amountToProccess) * 100d);
+            CurrentCommit = currentCommit;
+            CurrentAmount = currentAmount;
+            AmountToProccess = amountToProccess;
         }
     }
 }

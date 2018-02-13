@@ -8,11 +8,11 @@ namespace TfsMigrate.Core.Exporter
 {
     public class GitFastImport : ITraverseCommitTree
     {
-        private GitStreamWriter writer;
+        private readonly GitStreamWriter _writer;
 
         public GitFastImport(GitStreamWriter writer)
         {
-            this.writer = writer;
+            _writer = writer;
         }
 
         public void ProccessCommit(CommitNode commit)
@@ -22,58 +22,58 @@ namespace TfsMigrate.Core.Exporter
 
         public void VistReset(ResetNode resetNode)
         {
-            writer.WriteLine($"reset {resetNode.Reference}");
+            _writer.WriteLine($"reset {resetNode.Reference}");
 
             if (resetNode.From != null)
             {
-                writer.Write("from ");
+                _writer.Write("from ");
                 resetNode.From.AcceptVisitor(this);
-                writer.WriteLine();
+                _writer.WriteLine();
             }
         }
 
         public void VistFileRename(FileRenameNode fileRenameNode)
         {
-            writer.WriteLine($"C \"{fileRenameNode.Source}\" \"{fileRenameNode.Path}\"");
+            _writer.WriteLine($"C \"{fileRenameNode.Source}\" \"{fileRenameNode.Path}\"");
         }
 
         public void VistFileModify(FileModifyNode fileModifyNode)
         {
             if (fileModifyNode.Blob != null)
             {
-                writer.Write("M 644 ");
+                _writer.Write("M 644 ");
                 fileModifyNode.Blob.AcceptVisitor(this);
-                writer.Write(" " + "\"" + fileModifyNode.Path + "\"");
-                writer.WriteLine();
+                _writer.Write(" " + "\"" + fileModifyNode.Path + "\"");
+                _writer.WriteLine();
             }
             else
             {
-                writer.WriteLine($"M 644 inline \"{fileModifyNode.Path}\"");
+                _writer.WriteLine($"M 644 inline \"{fileModifyNode.Path}\"");
                 fileModifyNode.Data.AcceptVisitor(this);
             }
         }
 
         public void VistData(DataNode dataNode)
         {
-            var header = $"data {dataNode._Bytes.Length}";
-            writer.WriteLine(header);
-            writer.BaseStream.Write(dataNode._Bytes, 0, dataNode._Bytes.Length);
-            writer.WriteLine();
+            var header = $"data {dataNode.Bytes.Length}";
+            _writer.WriteLine(header);
+            _writer.BaseStream.Write(dataNode.Bytes, 0, dataNode.Bytes.Length);
+            _writer.WriteLine();
         }
 
         public void VistFileDelete(FileDeleteNode dataNode)
         {
-            writer.WriteLine($"D \"{dataNode.Path}\"");
+            _writer.WriteLine($"D \"{dataNode.Path}\"");
         }
 
         public void VistDeleteAll(FileDeleteAllNode dataNode)
         {
-            writer.WriteLine("deleteall");
+            _writer.WriteLine("deleteall");
         }
 
         public void VistFileCopy(FileCopyNode dataNode)
         {
-            writer.WriteLine($"C \"{dataNode.Source}\" \"{dataNode.Path}\"");
+            _writer.WriteLine($"C \"{dataNode.Source}\" \"{dataNode.Path}\"");
         }
 
         public void VistCommitter(CommitterNode dataNode)
@@ -88,7 +88,7 @@ namespace TfsMigrate.Core.Exporter
             command += $" <{dataNode.Email}> ";
             command += FormatDate(dataNode.Date);
 
-            writer.WriteLine(command);
+            _writer.WriteLine(command);
         }
 
         public void VistCommit(CommitNode dataNode)
@@ -101,12 +101,12 @@ namespace TfsMigrate.Core.Exporter
                 }
             }
 
-            writer.WriteLine($"commit {dataNode.Reference}");
+            _writer.WriteLine($"commit {dataNode.Reference}");
 
             if (dataNode.MarkId != null)
             {
                 var command = $"mark :{dataNode.MarkId}";
-                writer.WriteLine((command));
+                _writer.WriteLine((command));
                 dataNode.HasBeenRendered = true;
             }
 
@@ -120,16 +120,16 @@ namespace TfsMigrate.Core.Exporter
 
             if (dataNode.FromCommit != null)
             {
-                writer.Write("from ");
+                _writer.Write("from ");
                 dataNode.FromCommit.AcceptVisitor(this);
-                writer.WriteLine();
+                _writer.WriteLine();
             }
 
             foreach (var mc in dataNode.MergeCommits)
             {
-                writer.Write("merge ");
+                _writer.Write("merge ");
                 mc.AcceptVisitor(this);
-                writer.WriteLine();
+                _writer.WriteLine();
             }
 
             foreach (var fc in dataNode.FileNodes)
@@ -137,7 +137,7 @@ namespace TfsMigrate.Core.Exporter
                 fc.AcceptVisitor(this);
             }
 
-            writer.WriteLine();
+            _writer.WriteLine();
         }
 
         public void VistBlob(BlobNode dataNode)
@@ -146,12 +146,12 @@ namespace TfsMigrate.Core.Exporter
             {
                 dataNode.IsRendered = true;
 
-                writer.WriteLine("blob");
+                _writer.WriteLine("blob");
 
                 if (dataNode.MarkId != null)
                 {
                     var command = $"mark :{dataNode.MarkId}";
-                    writer.WriteLine(command);
+                    _writer.WriteLine(command);
 
                     dataNode.HasBeenRendered = true;
                 }
@@ -172,7 +172,7 @@ namespace TfsMigrate.Core.Exporter
             command += $" <{dataNode.Email}> ";
             command += FormatDate(dataNode.Date);
 
-            writer.WriteLine(command);
+            _writer.WriteLine(command);
         }
 
         public void VistMarkReference<T>(MarkReferenceNode<T> dataNode) where T : IMarkNode
@@ -183,12 +183,12 @@ namespace TfsMigrate.Core.Exporter
             }
 
             var reference = $":{dataNode.MarkId}";
-            writer.Write(reference);
+            _writer.Write(reference);
         }
 
         private static long ToUnixTimestamp(DateTimeOffset dt)
         {
-            DateTimeOffset unixRef = new DateTimeOffset(new DateTime(1970, 1, 1, 0, 0, 0));
+            var unixRef = new DateTimeOffset(new DateTime(1970, 1, 1, 0, 0, 0));
             return (dt.ToUniversalTime().Ticks - unixRef.Ticks) / 10000000;
         }
 

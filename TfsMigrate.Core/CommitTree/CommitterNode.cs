@@ -16,9 +16,9 @@ namespace TfsMigrate.Core.CommitTree
 
         public CommitterNode(string name, string email, DateTimeOffset date)
         {
-            this.Name = name;
-            this.Email = email;
-            this.Date = date;
+            Name = name;
+            Email = email;
+            Date = date;
         }
 
         public void AcceptVisitor(ITraverseCommitTree vistor)

@@ -7,18 +7,16 @@ namespace TfsMigrate.Core.CommitTree
 {
     public class DataNode : INode
     {
-        public ReadOnlyCollection<byte> Bytes => new ReadOnlyCollection<byte>(this._Bytes);
-
-        internal byte[] _Bytes;
+        internal byte[] Bytes;
 
         public DataNode(byte[] bytes)
         {
-            this._Bytes = (byte[])bytes.Clone();
+            Bytes = (byte[])bytes.Clone();
         }
 
         public DataNode(string str)
         {
-            this._Bytes = Encoding.UTF8.GetBytes(str);
+            Bytes = Encoding.UTF8.GetBytes(str);
         }
 
         public void AcceptVisitor(ITraverseCommitTree vistor)

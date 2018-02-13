@@ -11,8 +11,8 @@ namespace TfsMigrate.Core.CommitTree
 
         public FileRenameNode(string src, string dest)
         {
-            this.Source = src;
-            this.Path = dest;
+            Source = src;
+            Path = dest;
         }
 
         public void AcceptVisitor(ITraverseCommitTree vistor)

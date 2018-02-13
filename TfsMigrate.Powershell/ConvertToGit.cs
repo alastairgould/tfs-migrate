@@ -24,22 +24,22 @@ namespace TfsMigrate.Powershell
         [ValidateNotNullOrEmpty]
         public string LocalRepositoryPath { get; set; }
 
-        private IMediator mediator; 
+        private IMediator _mediator; 
 
         protected override void BeginProcessing()
         {
-            mediator = SetupMediator.CreateMediator(this);
+            _mediator = SetupMediator.CreateMediator(this);
         }
 
         protected override void ProcessRecord()
         {
-            mediator.Send(new ConvertTfsToGitCommand(Repositories,
+            _mediator.Send(new ConvertTfsToGitCommand(Repositories,
                 LocalRepositoryPath)).Wait();
         }
 
         public Task Handle(ProgressNotification notification, CancellationToken cancellationToken)
         {
-            ProgressRecord progress = new ProgressRecord(
+            var progress = new ProgressRecord(
                 1, 
                 "Convert Tfs Repository to Git",
                 $"{notification.CurrentAmount} of {notification.AmountToProccess} Commits Processed");
