@@ -8,6 +8,6 @@
 
 ### Convert-ToGit
 
-### Create-VstsGitRepository
+### Create-VstsRepository
 
 ### Import-WorkItemAssociations
