@@ -6,7 +6,7 @@
 
 ### Prerequisites
 
-* Make sure GIT is installed and its on your enviroment path
+* Make sure GIT is installed and its on your environment path
 * Make sure powershell 5 or above is installed
 
 ### Install From Powershell Gallery
