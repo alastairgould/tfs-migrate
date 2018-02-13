@@ -15,3 +15,11 @@
 ### Import-WorkItemAssociations
 
 ## Examples
+
+### Simple Tfs to Git Conversion
+
+### Fixing Split Histories
+
+### Conversion and VSTS Repository Creation
+
+### VSTS Repository Creation and Work Item Reassociation
