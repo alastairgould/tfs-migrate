@@ -30,7 +30,7 @@ Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folde
 
 ```powershell
 Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folder in tfs repo] 
-| Convert-ToGit -LocalRepositoryPath [local path to where the new git repo will be stored] 
+| Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folder in tfs repo] 
 | Convert-ToGit -LocalRepositoryPath [local path to where the new git repo will be stored] 
 ```
 
