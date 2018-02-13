@@ -17,6 +17,8 @@
 
 ### Convert-ToGit
 
+### Set-Master
+
 ### Import-VstsRepository
 
 ### Import-WorkItemAssociations
