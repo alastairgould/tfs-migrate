@@ -13,14 +13,14 @@ namespace TfsMigrate.Core.CommitTree
 
         public FileModifyNode(string path, MarkReferenceNode<BlobNode> blob)
         {
-            this.Path = path;
-            this.Blob = blob;
+            Path = path;
+            Blob = blob;
         }
 
         public FileModifyNode(string path, byte[] data)
         {
-            this.Path = path;
-            this.Data = new DataNode(data);
+            Path = path;
+            Data = new DataNode(data);
         }
 
         public void AcceptVisitor(ITraverseCommitTree vistor)

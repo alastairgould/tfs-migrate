@@ -5,30 +5,30 @@ namespace TfsMigrate.Core.Exporter
 {
     public class GitStreamWriter : StreamWriter
     {
-        private readonly Process process;
+        private readonly Process _process;
 
-        private bool disposed = false;
+        private bool _disposed;
 
         public GitStreamWriter(Process process) : base(process.StandardInput.BaseStream)
         {
-            this.process = process;
+            _process = process;
             NewLine = "\n";
             AutoFlush = true;
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposed)
+            if (_disposed)
             {
                 return;
             }
 
             if (disposing)
             {
-                process.Dispose();
+                _process.Dispose();
             }
 
-            disposed = true;
+            _disposed = true;
             base.Dispose(disposing);
         }
 
@@ -41,13 +41,15 @@ namespace TfsMigrate.Core.Exporter
         {
             Directory.CreateDirectory(repositoryPath);
 
-            ProcessStartInfo processStartInfo = new ProcessStartInfo("cmd.exe");
-            processStartInfo.RedirectStandardInput = true;
-            processStartInfo.RedirectStandardOutput = true;
-            processStartInfo.UseShellExecute = false;
-            processStartInfo.WorkingDirectory = repositoryPath;
+            var processStartInfo = new ProcessStartInfo("cmd.exe")
+            {
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                WorkingDirectory = repositoryPath
+            };
 
-            Process process = Process.Start(processStartInfo);
+            var process = Process.Start(processStartInfo);
 
             if (process != null)
             {

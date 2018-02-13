@@ -43,14 +43,14 @@ namespace TfsMigrate.Core.CommitTree
             if (commitInfo == null)
                 throw new InvalidOperationException("Commit Information must be specified for this commit.");
 
-            this.MarkId = markId;
-            this.Reference = reference;
-            this.Author = author;
-            this.Committer = committer;
-            this.CommitInfo = commitInfo;
-            this.FromCommit = fromCommit;
-            this.MergeCommits = (mergeCommits ?? new List<MarkReferenceNode<CommitNode>>()).ToList().AsReadOnly();
-            this.FileNodes = (fileNodes ?? new List<IFileNode>()).ToList().AsReadOnly();
+            MarkId = markId;
+            Reference = reference;
+            Author = author;
+            Committer = committer;
+            CommitInfo = commitInfo;
+            FromCommit = fromCommit;
+            MergeCommits = (mergeCommits ?? new List<MarkReferenceNode<CommitNode>>()).ToList().AsReadOnly();
+            FileNodes = (fileNodes ?? new List<IFileNode>()).ToList().AsReadOnly();
         }
 
         public void AcceptVisitor(ITraverseCommitTree vistor)

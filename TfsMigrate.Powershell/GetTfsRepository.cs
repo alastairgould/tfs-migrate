@@ -18,8 +18,8 @@ namespace TfsMigrate.Powershell
         {
             WriteObject(new TfsRepository()
             {
-                ProjectCollection = new System.Uri(this.ProjectCollection),
-                Path = this.Path
+                ProjectCollection = new System.Uri(ProjectCollection),
+                Path = Path
             });
         }
     }

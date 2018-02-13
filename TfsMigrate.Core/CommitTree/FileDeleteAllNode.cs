@@ -9,7 +9,7 @@ namespace TfsMigrate.Core.CommitTree
 
         public FileDeleteAllNode()
         {
-            this.Path = null;
+            Path = null;
         }
 
         public void AcceptVisitor(ITraverseCommitTree vistor)
