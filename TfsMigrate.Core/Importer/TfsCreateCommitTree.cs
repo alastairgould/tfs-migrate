@@ -92,7 +92,7 @@ namespace TfsMigrate.Core.Importer
 
             if (!branches.ContainsKey(branch))
             {
-                branches[branch] = Tuple.Create(string.Format("refs/heads/{0}", Path.GetFileName(serverPath)), default(CommitNode));
+                branches[branch] = Tuple.Create($"refs/heads/{Path.GetFileName(serverPath)}", default(CommitNode));
                 fileNodes.Add(new FileDeleteAllNode());
             }
         }

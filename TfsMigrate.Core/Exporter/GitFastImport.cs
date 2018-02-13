@@ -22,7 +22,7 @@ namespace TfsMigrate.Core.Exporter
 
         public void VistReset(ResetNode resetNode)
         {
-            writer.WriteLine(string.Format("reset {0}", resetNode.Reference));
+            writer.WriteLine($"reset {resetNode.Reference}");
 
             if (resetNode.From != null)
             {
@@ -34,7 +34,7 @@ namespace TfsMigrate.Core.Exporter
 
         public void VistFileRename(FileRenameNode fileRenameNode)
         {
-            writer.WriteLine(string.Format("C \"{0}\" \"{1}\"", fileRenameNode.Source, fileRenameNode.Path));
+            writer.WriteLine($"C \"{fileRenameNode.Source}\" \"{fileRenameNode.Path}\"");
         }
 
         public void VistFileModify(FileModifyNode fileModifyNode)
@@ -48,14 +48,14 @@ namespace TfsMigrate.Core.Exporter
             }
             else
             {
-                writer.WriteLine(string.Format("M 644 inline \"{0}\"", fileModifyNode.Path));
+                writer.WriteLine($"M 644 inline \"{fileModifyNode.Path}\"");
                 fileModifyNode.Data.AcceptVisitor(this);
             }
         }
 
         public void VistData(DataNode dataNode)
         {
-            var header = string.Format("data {0}", dataNode._Bytes.Length);
+            var header = $"data {dataNode._Bytes.Length}";
             writer.WriteLine(header);
             writer.BaseStream.Write(dataNode._Bytes, 0, dataNode._Bytes.Length);
             writer.WriteLine();
@@ -63,7 +63,7 @@ namespace TfsMigrate.Core.Exporter
 
         public void VistFileDelete(FileDeleteNode dataNode)
         {
-            writer.WriteLine(string.Format("D \"{0}\"", dataNode.Path));
+            writer.WriteLine($"D \"{dataNode.Path}\"");
         }
 
         public void VistDeleteAll(FileDeleteAllNode dataNode)
@@ -73,7 +73,7 @@ namespace TfsMigrate.Core.Exporter
 
         public void VistFileCopy(FileCopyNode dataNode)
         {
-            writer.WriteLine(string.Format("C \"{0}\" \"{1}\"", dataNode.Source, dataNode.Path));
+            writer.WriteLine($"C \"{dataNode.Source}\" \"{dataNode.Path}\"");
         }
 
         public void VistCommitter(CommitterNode dataNode)
@@ -85,7 +85,7 @@ namespace TfsMigrate.Core.Exporter
                 command += " " + dataNode.Name;
             }
 
-            command += string.Format(" <{0}> ", dataNode.Email);
+            command += $" <{dataNode.Email}> ";
             command += FormatDate(dataNode.Date);
 
             writer.WriteLine(command);
@@ -101,11 +101,11 @@ namespace TfsMigrate.Core.Exporter
                 }
             }
 
-            writer.WriteLine(string.Format("commit {0}", dataNode.Reference));
+            writer.WriteLine($"commit {dataNode.Reference}");
 
             if (dataNode.MarkId != null)
             {
-                var command = string.Format("mark :{0}", dataNode.MarkId);
+                var command = $"mark :{dataNode.MarkId}";
                 writer.WriteLine((command));
                 dataNode.HasBeenRendered = true;
             }
@@ -150,7 +150,7 @@ namespace TfsMigrate.Core.Exporter
 
                 if (dataNode.MarkId != null)
                 {
-                    var command = string.Format("mark :{0}", dataNode.MarkId);
+                    var command = $"mark :{dataNode.MarkId}";
                     writer.WriteLine(command);
 
                     dataNode.HasBeenRendered = true;
@@ -169,7 +169,7 @@ namespace TfsMigrate.Core.Exporter
                 command += " " + dataNode.Name;
             }
 
-            command += string.Format(" <{0}> ", dataNode.Email);
+            command += $" <{dataNode.Email}> ";
             command += FormatDate(dataNode.Date);
 
             writer.WriteLine(command);
@@ -182,7 +182,7 @@ namespace TfsMigrate.Core.Exporter
                 throw new InvalidOperationException("A MarkCommand cannot be referenced if it has not been rendered.");
             }
 
-            var reference = string.Format(":{0}", dataNode.MarkId);
+            var reference = $":{dataNode.MarkId}";
             writer.Write(reference);
         }
 
@@ -195,7 +195,7 @@ namespace TfsMigrate.Core.Exporter
         private static string FormatDate(DateTimeOffset date)
         {
             var timestamp = ToUnixTimestamp(date);
-            return string.Format("{0} +0000", timestamp);
+            return $"{timestamp} +0000";
         }
     }
 }
