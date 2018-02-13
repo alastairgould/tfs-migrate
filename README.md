@@ -18,7 +18,7 @@
 
 ### Simple Tfs to Git Conversion
 
-### Fixing Split Histories
+### Fix Split Histories
 
 ### Import into VSTS Repository
 
