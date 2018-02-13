@@ -20,6 +20,6 @@
 
 ### Fixing Split Histories
 
-### Conversion and VSTS Repository Creation
+### VSTS Repository Creation
 
 ### VSTS Repository Creation and Work Item Reassociation
