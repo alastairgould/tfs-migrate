@@ -25,7 +25,7 @@
 
 ## Examples
 
-### Simple Tfs to Git Conversion
+### Simple Tfs to Git conversion
 
 ```powershell
 Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folder in tfs repo] 
@@ -35,7 +35,7 @@ Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folde
 
 ### Set master branch
 
-### Fix Split Histories
+### Fix split histories
 
 ```powershell
 Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folder in tfs repo] 
@@ -43,6 +43,6 @@ Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folde
 | Convert-ToGit -LocalRepositoryPath [local path to where the new git repo will be stored] 
 ```
 
-### Import into VSTS GIT Repository
+### Import into VSTS GIT repository
 
-### Import into VSTS GIT Repository and Work Item Reassociation
+### Import into VSTS GIT repository and work item reassociation
