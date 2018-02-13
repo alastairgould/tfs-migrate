@@ -19,7 +19,7 @@
 
 ### Set-MasterBranch
 
-### Import-VstsRepository
+### Import-ToVstsRepository
 
 ### Import-WorkItemAssociations
 
