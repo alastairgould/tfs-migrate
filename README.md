@@ -33,7 +33,7 @@ Get-TfsRepository -ProjectCollection [projectcollectionurl] -Path [Path to folde
 
 ```
 
-### Set Master Branch
+### Set master branch
 
 ### Fix Split Histories
 
