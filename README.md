@@ -10,7 +10,7 @@
 
 ### Convert-ToGit
 
-### Create-VstsRepository
+### Import-VstsRepository
 
 ### Import-WorkItemAssociations
 
@@ -20,6 +20,6 @@
 
 ### Fixing Split Histories
 
-### VSTS Repository Creation
+### Import into VSTS Repository
 
-### VSTS Repository Creation and Work Item Reassociation
+### Import into VSTS Repository and Work Item Reassociation
