@@ -43,7 +43,7 @@ namespace TfsMigrate.Core.Importer
             });
 
             var id = _markId++;
-            var blob = BlobNode.BuildBlob(task, id);
+            var blob = new BlobNode(task, id);
             return blob;
         }
 
