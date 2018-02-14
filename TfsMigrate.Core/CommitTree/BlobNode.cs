@@ -27,6 +27,7 @@ namespace TfsMigrate.Core.CommitTree
             MarkId = markId;
             IsRendered = false;
         }
+
         public BlobNode(Task<byte[]> data, int? markId)
             : this(new DataNode(data), markId) { }
 
