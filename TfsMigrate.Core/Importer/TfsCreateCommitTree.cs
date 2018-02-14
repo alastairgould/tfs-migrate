@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.TeamFoundation;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Polly;
@@ -29,17 +30,21 @@ namespace TfsMigrate.Core.Importer
                 .Or<TeamFoundationServerUnauthorizedException>()
                 .Retry(5);
 
-            return policy.Execute(() =>
+            var task = Task.Factory.StartNew(() =>
             {
-                var bytes = new byte[item.ContentLength];
-                var str = item.DownloadFile();
-                str.Read(bytes, 0, bytes.Length);
-                str.Close();
-
-                var id = _markId++;
-                var blob = BlobNode.BuildBlob(bytes, id);
-                return blob;
+                return policy.Execute(() =>
+                {
+                    var bytes = new byte[item.ContentLength];
+                    var str = item.DownloadFile();
+                    str.Read(bytes, 0, bytes.Length);
+                    str.Close();
+                    return bytes;
+                });
             });
+
+            var id = _markId++;
+            var blob = BlobNode.BuildBlob(task, id);
+            return blob;
         }
 
         private static BranchHistoryTreeItem FindMergedItem(BranchHistoryTreeItem parent, int changeSetId)

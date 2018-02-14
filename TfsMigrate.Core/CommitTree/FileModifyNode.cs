@@ -1,4 +1,5 @@
-﻿using TfsMigrate.Core.CommitTree.NodeTypes;
+﻿using System.Threading.Tasks;
+using TfsMigrate.Core.CommitTree.NodeTypes;
 using TfsMigrate.Core.CommitTree.Traverse;
 
 namespace TfsMigrate.Core.CommitTree
@@ -17,7 +18,7 @@ namespace TfsMigrate.Core.CommitTree
             Blob = blob;
         }
 
-        public FileModifyNode(string path, byte[] data)
+        public FileModifyNode(string path, Task<byte[]> data)
         {
             Path = path;
             Data = new DataNode(data);

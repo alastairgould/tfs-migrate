@@ -1,5 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.Text;
+﻿using System.Text;
+using System.Threading.Tasks;
 using TfsMigrate.Core.CommitTree.NodeTypes;
 using TfsMigrate.Core.CommitTree.Traverse;
 
@@ -7,16 +7,16 @@ namespace TfsMigrate.Core.CommitTree
 {
     public class DataNode : INode
     {
-        internal byte[] Bytes;
+        internal Task<byte[]> Bytes;
 
-        public DataNode(byte[] bytes)
+        public DataNode(Task<byte[]> bytes)
         {
-            Bytes = (byte[])bytes.Clone();
+            Bytes = bytes;
         }
 
         public DataNode(string str)
         {
-            Bytes = Encoding.UTF8.GetBytes(str);
+            Bytes = Task.Run(() => Encoding.UTF8.GetBytes(str));
         }
 
         public void AcceptVisitor(ITraverseCommitTree vistor)

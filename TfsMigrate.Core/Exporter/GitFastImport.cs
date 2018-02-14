@@ -55,9 +55,9 @@ namespace TfsMigrate.Core.Exporter
 
         public void VistData(DataNode dataNode)
         {
-            var header = $"data {dataNode.Bytes.Length}";
+            var header = $"data {dataNode.Bytes.Result.Length}";
             _writer.WriteLine(header);
-            _writer.BaseStream.Write(dataNode.Bytes, 0, dataNode.Bytes.Length);
+            _writer.BaseStream.Write(dataNode.Bytes.Result, 0, dataNode.Bytes.Result.Length);
             _writer.WriteLine();
         }
 
