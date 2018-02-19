@@ -17,15 +17,8 @@ namespace TfsMigrate.Core.Importer
 
         private readonly List<CommitNode> _merges = new List<CommitNode>();
 
-        private readonly IFindEmailAddress _findEmailAddress;
-
         // 10,000,000 to get it out of way of normal checkins
         private static int _markId = 10000001;
-
-        public TfsCreateCommitTree(IFindEmailAddress findEmailAddress)
-        {
-            _findEmailAddress = findEmailAddress;
-        }
 
         private BlobNode GetDataBlob(Item item)
         {
@@ -65,11 +58,43 @@ namespace TfsMigrate.Core.Importer
             return null;
         }
 
+        #region Active Directory
+        private static string ProcessAdName(string adName)
+        {
+            if (string.IsNullOrEmpty(adName))
+                return "";
+
+            if (!adName.Contains('\\'))
+                return adName;
+
+
+            var split = adName.Split('\\');
+            return split[1];
+        }
+
+        private static UserPrincipal GetUserPrincipal(string userName)
+        {
+            return null;
+        }
+
+        private static string GetEmailAddressForUser(string userName)
+        {
+            try
+            {
+                return GetUserPrincipal(userName).EmailAddress;
+            }
+            catch
+            {
+                return "no.user@example.com";
+            }
+        }
+
+        #endregion
         public CommitNode CreateCommitTree(Changeset changeSet,
            Branches branches)
         {
-            var committer = new CommitterNode(changeSet.Committer, _findEmailAddress.EmailAddressForUser(changeSet.Committer), changeSet.CreationDate);
-            var author = changeSet.Committer != changeSet.Owner ? new AuthorNode(changeSet.Owner, _findEmailAddress.EmailAddressForUser(changeSet.Owner), changeSet.CreationDate) : null;
+            var committer = new CommitterNode(changeSet.Committer, GetEmailAddressForUser(changeSet.Committer), changeSet.CreationDate);
+            var author = changeSet.Committer != changeSet.Owner ? new AuthorNode(changeSet.Owner, GetEmailAddressForUser(changeSet.Owner), changeSet.CreationDate) : null;
 
             var orderedChanges = changeSet.Changes
                 .Select((x, i) => new { x, i })
