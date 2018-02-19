@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using TfsMigrate.Contracts;
 using TfsMigrate.Core.CommitTree;
+using TfsMigrate.Core.CommitTree.Branches;
 using TfsMigrate.Core.Exporter;
 using TfsMigrate.Core.Importer;
 using TfsMigrate.Core.UseCases.ConvertTfsToGit.Events;
@@ -29,7 +30,7 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
             var validator = new ConvertTfsToGitCommandValidation();
             var validationResults = validator.Validate(convertTfsToGitCommand);
 
-            var branches = new Dictionary<string, Tuple<string, CommitNode>>();
+            var branches = new Branches(); 
 
             using (var writer = GitStreamWriter.CreateGitStreamWriter(convertTfsToGitCommand.RepositoryDirectory))
             {
@@ -45,7 +46,7 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
             return Task.CompletedTask;
         }
 
-        private void ConvertRepository(Dictionary<string, Tuple<string, CommitNode>> branches,
+        private void ConvertRepository(Branches branches,
             GitStreamWriter writer,
             TfsRepository reposistory,
             bool shouldSkipFirstCommit)
@@ -65,7 +66,7 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
             }
         }
 
-        private void ConvertChangeSet(Dictionary<string, Tuple<string, CommitNode>> branches,
+        private void ConvertChangeSet(Branches branches,
             Changeset changeSet,
             GitStreamWriter stream)
         {
