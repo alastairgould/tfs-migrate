@@ -9,8 +9,6 @@ namespace TfsMigrate.Core.CommitTree
 {
     public class BlobNode : IMarkNode
     {
-
-
         public bool IsRendered { get; set; }
 
         public DataNode DataNode { get; }
