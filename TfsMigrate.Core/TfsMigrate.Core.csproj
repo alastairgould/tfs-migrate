@@ -246,6 +246,7 @@
     <Compile Include="CommitTree\Traverse\ITraverseCommitTree.cs" />
     <Compile Include="Exporter\GitStreamWriter.cs" />
     <Compile Include="Importer\ActiveDirectoryEmailAddress.cs" />
+    <Compile Include="Importer\ChangeSetProgressNotifier.cs" />
     <Compile Include="Importer\IRetriveChangeSets.cs" />
     <Compile Include="Importer\IFindEmailAddress.cs" />
     <Compile Include="Importer\TfsCreateCommitTree.cs" />

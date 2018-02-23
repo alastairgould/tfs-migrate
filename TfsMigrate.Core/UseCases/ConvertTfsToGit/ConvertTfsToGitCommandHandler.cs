@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using TfsMigrate.Contracts;
-using TfsMigrate.Core.CommitTree;
 using TfsMigrate.Core.CommitTree.Branches;
 using TfsMigrate.Core.Exporter;
 using TfsMigrate.Core.Importer;
-using TfsMigrate.Core.UseCases.ConvertTfsToGit.Events;
 
 namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 {
@@ -18,8 +14,10 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
     {
         private readonly IRetriveChangeSets _retriveChangeSets;
         private readonly IMediator _mediator;
+        private ChangeSetProgressNotifier _progressNotifier;
 
-        public ConvertTfsToGitCommandHandler(IRetriveChangeSets retriveChangeSets, IMediator mediator)
+        public ConvertTfsToGitCommandHandler(IRetriveChangeSets retriveChangeSets, 
+            IMediator mediator)
         {
             _retriveChangeSets = retriveChangeSets;
             _mediator = mediator;
@@ -27,10 +25,10 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
         public Task Handle(ConvertTfsToGitCommand convertTfsToGitCommand, CancellationToken cancellationToken)
         {
-            var validator = new ConvertTfsToGitCommandValidation();
-            var validationResults = validator.Validate(convertTfsToGitCommand);
+            var branches = new Branches();
 
-            var branches = new Branches(); 
+            _progressNotifier = new ChangeSetProgressNotifier(convertTfsToGitCommand.Repositories, 
+                _retriveChangeSets, _mediator);
 
             using (var writer = GitStreamWriter.CreateGitStreamWriter(convertTfsToGitCommand.RepositoryDirectory))
             {
@@ -52,7 +50,6 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
             bool shouldSkipFirstCommit)
         {
             var changeSets = _retriveChangeSets.RetriveChangeSets(reposistory.ProjectCollection, reposistory.Path);
-            var amountToProccess = changeSets.Count();
 
             if(shouldSkipFirstCommit)
             {
@@ -61,7 +58,7 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
             foreach (var changeSetAndIndex in changeSets.Select((value, i) => new { CurrentIndex = i, ChangeSet = value }))
             {
-                ProgressNotification(changeSetAndIndex.CurrentIndex, amountToProccess, changeSetAndIndex.ChangeSet);
+                _progressNotifier.NextChangeSet(changeSetAndIndex.ChangeSet);
                 ConvertChangeSet(branches, changeSetAndIndex.ChangeSet, writer);
             }
         }
@@ -75,16 +72,6 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
             var gitFastExport = new GitFastImport(stream);
             gitFastExport.ProccessCommit(commitTree);
-        }
-
-        private void ProgressNotification(int currentAmount, int amountToProccess, Changeset changeSet)
-        {
-            var currentCommit = new CurrentCommit(changeSet.ChangesetId, changeSet.Comment);
-
-            _mediator.Publish(new ProgressNotification(
-                currentAmount,
-                amountToProccess,
-                currentCommit));
         }
     }
 }

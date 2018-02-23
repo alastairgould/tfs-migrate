@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Core", "TfsMigrate.Core\TfsMigrate.Core.csproj", "{5E7A35D6-1FA5-42C3-BD42-2B1315E3A126}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Contracts", "TfsMigrate.Contracts\TfsMigrate.Contracts.csproj", "{19FF0D05-EE95-4EF9-A957-0344D7439EF0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Powershell", "TfsMigrate.Powershell\TfsMigrate.Powershell.csproj", "{7569A599-1152-43A5-9E8F-8BB23E706056}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tfs", "Tfs\Tfs.csproj", "{4ECCF153-3739-4756-ACCD-9E22D8642AEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{7569A599-1152-43A5-9E8F-8BB23E706056}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7569A599-1152-43A5-9E8F-8BB23E706056}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7569A599-1152-43A5-9E8F-8BB23E706056}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ECCF153-3739-4756-ACCD-9E22D8642AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ECCF153-3739-4756-ACCD-9E22D8642AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ECCF153-3739-4756-ACCD-9E22D8642AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ECCF153-3739-4756-ACCD-9E22D8642AEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
