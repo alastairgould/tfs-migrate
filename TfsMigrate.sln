@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Core", "TfsMigrate.Core\TfsMigrate.Core.csproj", "{5E7A35D6-1FA5-42C3-BD42-2B1315E3A126}"
 EndProject

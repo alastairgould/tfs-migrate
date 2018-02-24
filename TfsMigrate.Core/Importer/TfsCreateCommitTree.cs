@@ -141,11 +141,14 @@ namespace TfsMigrate.Core.Importer
                     var itemHistory = history[0][0];
                     var mergedItem = FindMergedItem(itemHistory, changeSet.ChangesetId);
 
-                    var previousCommit = branches.GetBranch(mergedItem.Relative.BranchFromItem.ServerItem).Head;
-
-                    if (!_merges.Contains(previousCommit))
+                    if (branches.GetBranch(mergedItem.Relative.BranchFromItem.ServerItem) != null)
                     {
-                        _merges.Add(previousCommit);
+                        var previousCommit = branches.GetBranch(mergedItem.Relative.BranchFromItem.ServerItem)?.Head;
+
+                        if (!_merges.Contains(previousCommit))
+                        {
+                            _merges.Add(previousCommit);
+                        }
                     }
                 }
 
@@ -156,11 +159,14 @@ namespace TfsMigrate.Core.Importer
 
                     foreach (var mh in mergeHistory)
                     {
-                        var previousCommit = branches.GetBranch(mh.SourceItem.Item.ServerItem).Head;
-
-                        if (!_merges.Contains(previousCommit))
+                        if (branches.GetBranch(mh.SourceItem.Item.ServerItem) != null)
                         {
-                            _merges.Add(previousCommit);
+                            var previousCommit = branches.GetBranch(mh.SourceItem.Item.ServerItem)?.Head;
+
+                            if (!_merges.Contains(previousCommit))
+                            {
+                                _merges.Add(previousCommit);
+                            }
                         }
                     }
                 }

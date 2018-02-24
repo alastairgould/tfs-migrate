@@ -39,25 +39,40 @@ namespace TfsMigrate.Core.Exporter
 
         private static Process CreateGitFastImportProcess(string repositoryPath)
         {
-            Directory.CreateDirectory(repositoryPath);
+            IntialiseGit(repositoryPath);
 
-            var processStartInfo = new ProcessStartInfo("cmd.exe")
+            var processStartInfo = new ProcessStartInfo("git.exe")
             {
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
-                WorkingDirectory = repositoryPath
+                WorkingDirectory = repositoryPath,
+                CreateNoWindow = true,
+                Arguments = "fast-import"
+            };
+
+            return Process.Start(processStartInfo);
+        }
+
+        private static void IntialiseGit(string repositoryPath)
+        {
+            Directory.CreateDirectory(repositoryPath);
+
+            var processStartInfo = new ProcessStartInfo("git")
+            {
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                WorkingDirectory = repositoryPath,
+                CreateNoWindow =  true,
+                Arguments = "init"
             };
 
             var process = Process.Start(processStartInfo);
 
-            if (process != null)
-            {
-                process.StandardInput.WriteLine("git init");
-                process.StandardInput.WriteLine("git fast-import");
-            }
+            Debug.Assert(process != null, nameof(process) + " != null");
 
-            return process;
+            process.WaitForExit();
         }
     }
 }
