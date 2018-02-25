@@ -4,11 +4,11 @@
     {
         public string GitBranchName => @"refs/heads/" + BranchName;
 
-        public string BranchName { get; set; }
+        public string BranchName { get; }
 
-        public string TfsPath { get; set; }
+        public string TfsPath { get; }
 
-        public CommitNode Head { get; set; }
+        public CommitNode Head { get; private set; }
 
         public Branch(string tfsPath, string branchName, CommitNode head)
         {

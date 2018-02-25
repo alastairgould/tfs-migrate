@@ -4,7 +4,7 @@ using TfsMigrate.Contracts;
 
 namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 {
-    public class ConvertTfsToGitCommand : IRequest
+    public class ConvertTfsToGitCommand : IRequest<GitRepository>
     {
         public IEnumerable<TfsRepository> Repositories { get; }
         

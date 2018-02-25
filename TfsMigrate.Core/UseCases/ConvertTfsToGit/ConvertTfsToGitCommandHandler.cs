@@ -10,24 +10,24 @@ using TfsMigrate.Core.Importer;
 
 namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 {
-    public class ConvertTfsToGitCommandHandler : IRequestHandler<ConvertTfsToGitCommand>
+    public class ConvertTfsToGitCommandHandler : IRequestHandler<ConvertTfsToGitCommand, GitRepository>
     {
         private readonly IRetriveChangeSets _retriveChangeSets;
         private readonly IMediator _mediator;
         private ChangeSetProgressNotifier _progressNotifier;
 
-        public ConvertTfsToGitCommandHandler(IRetriveChangeSets retriveChangeSets, 
+        public ConvertTfsToGitCommandHandler(IRetriveChangeSets retriveChangeSets,
             IMediator mediator)
         {
             _retriveChangeSets = retriveChangeSets;
             _mediator = mediator;
         }
 
-        public Task Handle(ConvertTfsToGitCommand convertTfsToGitCommand, CancellationToken cancellationToken)
+        public Task<GitRepository> Handle(ConvertTfsToGitCommand convertTfsToGitCommand, CancellationToken cancellationToken)
         {
             var branches = new Branches();
 
-            _progressNotifier = new ChangeSetProgressNotifier(convertTfsToGitCommand.Repositories, 
+            _progressNotifier = new ChangeSetProgressNotifier(convertTfsToGitCommand.Repositories,
                 _retriveChangeSets, _mediator);
 
             using (var writer = GitStreamWriter.CreateGitStreamWriter(convertTfsToGitCommand.RepositoryDirectory))
@@ -41,7 +41,10 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
                 }
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(new GitRepository()
+            {
+                Path = convertTfsToGitCommand.RepositoryDirectory
+            });
         }
 
         private void ConvertRepository(Branches branches,
@@ -51,7 +54,7 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
         {
             var changeSets = _retriveChangeSets.RetriveChangeSets(reposistory.ProjectCollection, reposistory.Path);
 
-            if(shouldSkipFirstCommit)
+            if (shouldSkipFirstCommit)
             {
                 changeSets = changeSets.Skip(1);
             }
