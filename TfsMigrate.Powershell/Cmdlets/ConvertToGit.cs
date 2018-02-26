@@ -20,7 +20,8 @@ namespace TfsMigrate.Powershell.Cmdlets
 
         [Parameter(
             Position = 1,
-            Mandatory = true)]
+            Mandatory = true
+        )]
         [ValidateNotNullOrEmpty]
         public string LocalRepositoryPath { get; set; }
 
