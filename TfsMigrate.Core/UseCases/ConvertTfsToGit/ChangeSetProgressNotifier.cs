@@ -3,9 +3,10 @@ using System.Linq;
 using MediatR;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using TfsMigrate.Contracts;
+using TfsMigrate.Core.Importer;
 using TfsMigrate.Core.UseCases.ConvertTfsToGit.Events;
 
-namespace TfsMigrate.Core.Importer
+namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 {
     public class ChangeSetProgressNotifier
     {
@@ -39,14 +40,14 @@ namespace TfsMigrate.Core.Importer
 
         public void NextChangeSet(Changeset changeSet)
         {
+            _current++;
+
             var currentCommit = new CurrentCommit(changeSet.ChangesetId, changeSet.Comment);
 
             _mediator.Publish(new ProgressNotification(
                 _current,
                 _total,
                 currentCommit));
-
-            _current++;
         }
     }
 }

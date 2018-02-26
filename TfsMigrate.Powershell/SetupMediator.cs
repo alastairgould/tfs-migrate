@@ -10,6 +10,11 @@ namespace TfsMigrate.Powershell
 {
     public static class SetupMediator
     {
+        public static IMediator CreateMediator()
+        {
+            return CreateMediator(null);
+        }
+
         public static IMediator CreateMediator(INotificationHandler<ProgressNotification> progressNotificationHandler)
         {
             var builder = new ContainerBuilder();
@@ -38,7 +43,8 @@ namespace TfsMigrate.Powershell
 
             builder.RegisterAssemblyTypes(typeof(ConvertTfsToGitCommand).GetTypeInfo().Assembly).AsImplementedInterfaces();
 
-            builder.RegisterInstance(progressNotificationHandler).As<INotificationHandler<ProgressNotification>>();
+            if(progressNotificationHandler != null)
+                builder.RegisterInstance(progressNotificationHandler).As<INotificationHandler<ProgressNotification>>();
 
             var container = builder.Build();
             return container.Resolve<IMediator>();

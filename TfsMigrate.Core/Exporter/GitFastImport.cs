@@ -22,7 +22,7 @@ namespace TfsMigrate.Core.Exporter
 
         public void VistReset(ResetNode resetNode)
         {
-            _writer.WriteLine($"reset {resetNode.Reference}");
+            _writer.WriteLine($"reset ");
 
             if (resetNode.From != null)
             {
@@ -95,10 +95,7 @@ namespace TfsMigrate.Core.Exporter
         {
             foreach (var fc in dataNode.FileNodes.OfType<FileModifyNode>())
             {
-                if (fc.Blob != null)
-                {
-                    fc.Blob.MarkNode.AcceptVisitor(this);
-                }
+                fc.Blob?.MarkNode.AcceptVisitor(this);
             }
 
             _writer.WriteLine($"commit {dataNode.Reference}");
@@ -110,10 +107,7 @@ namespace TfsMigrate.Core.Exporter
                 dataNode.HasBeenRendered = true;
             }
 
-            if (dataNode.Author != null)
-            {
-                dataNode.Author.AcceptVisitor(this);
-            }
+            dataNode.Author?.AcceptVisitor(this);
 
             dataNode.Committer.AcceptVisitor(this);
             dataNode.CommitInfo.AcceptVisitor(this);

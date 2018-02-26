@@ -242,11 +242,12 @@
     <Compile Include="CommitTree\NodeTypes\INode.cs" />
     <Compile Include="CommitTree\MarkReferenceNode.cs" />
     <Compile Include="CommitTree\ResetNode.cs" />
+    <Compile Include="Exporter\GitClient.cs" />
     <Compile Include="Exporter\GitFastImport.cs" />
     <Compile Include="CommitTree\Traverse\ITraverseCommitTree.cs" />
     <Compile Include="Exporter\GitStreamWriter.cs" />
     <Compile Include="Importer\ActiveDirectoryEmailAddress.cs" />
-    <Compile Include="Importer\ChangeSetProgressNotifier.cs" />
+    <Compile Include="UseCases\ConvertTfsToGit\ChangeSetProgressNotifier.cs" />
     <Compile Include="Importer\IRetriveChangeSets.cs" />
     <Compile Include="Importer\IFindEmailAddress.cs" />
     <Compile Include="Importer\TfsCreateCommitTree.cs" />
@@ -254,8 +255,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\ConvertTfsToGitCommand.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\ConvertTfsToGitCommandHandler.cs" />
-    <Compile Include="UseCases\ConvertTfsToGit\ConvertTfsToGitCommandValidation.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\Events\ProgressNotification.cs" />
+    <Compile Include="UseCases\PublishToVstsRepository\PublishToVstsGitRepositoryCommand.cs" />
+    <Compile Include="UseCases\PublishToVstsRepository\PublishToVstsGitRepositoryCommandHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -6,7 +6,7 @@ using TfsMigrate.Contracts;
 using TfsMigrate.Core.UseCases.ConvertTfsToGit;
 using TfsMigrate.Core.UseCases.ConvertTfsToGit.Events;
 
-namespace TfsMigrate.Powershell
+namespace TfsMigrate.Powershell.Cmdlets
 {
     [Cmdlet(VerbsData.ConvertTo, "Git")]
     public class ConvertToGit : Cmdlet, INotificationHandler<ProgressNotification>
@@ -33,8 +33,10 @@ namespace TfsMigrate.Powershell
 
         protected override void ProcessRecord()
         {
-            _mediator.Send(new ConvertTfsToGitCommand(Repositories,
-                LocalRepositoryPath)).Wait();
+            var result = _mediator.Send(new ConvertTfsToGitCommand(Repositories,
+                LocalRepositoryPath)).Result;
+
+            WriteObject(result);
         }
 
         public Task Handle(ProgressNotification notification, CancellationToken cancellationToken)
@@ -45,7 +47,7 @@ namespace TfsMigrate.Powershell
                 $"{notification.CurrentAmount} of {notification.AmountToProccess} Commits Processed");
 
             progress.PercentComplete = notification.PercentComplete;
-            progress.CurrentOperation = $"Curently processing commit: {notification.CurrentCommit}";
+            progress.CurrentOperation = $"Currently processing commit: {notification.CurrentCommit}";
             WriteProgress(progress);
             return Task.CompletedTask;
         }

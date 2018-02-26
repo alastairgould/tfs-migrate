@@ -2,7 +2,7 @@
 using System.Management.Automation;
 using TfsMigrate.Contracts;
 
-namespace TfsMigrate.Powershell
+namespace TfsMigrate.Powershell.Cmdlets
 {
     [Cmdlet(VerbsCommon.Get, "TfsRepository")]
     public class GetTfsRepository : Cmdlet
