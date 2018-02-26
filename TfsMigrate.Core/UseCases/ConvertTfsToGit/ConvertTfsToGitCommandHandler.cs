@@ -56,10 +56,10 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
                 changeSets = changeSets.Skip(1);
             }
 
-            foreach (var changeSetAndIndex in changeSets.Select((value, i) => new { CurrentIndex = i, ChangeSet = value }))
+            foreach (var changeSet in changeSets)
             {
-                _progressNotifier.NextChangeSet(changeSetAndIndex.ChangeSet);
-                ConvertChangeSet(branches, changeSetAndIndex.ChangeSet, writer);
+                _progressNotifier.NextChangeSet(changeSet);
+                ConvertChangeSet(branches, changeSet, writer);
             }
         }
 
