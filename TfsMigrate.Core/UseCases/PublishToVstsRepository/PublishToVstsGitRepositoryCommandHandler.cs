@@ -12,10 +12,10 @@ namespace TfsMigrate.Core.UseCases.PublishToVstsRepository
         public async Task Handle(PublishToVstsGitRepositoryCommand message, CancellationToken cancellationToken)
         {
             var gitRepository = await CreateVstsGitRepository(message, cancellationToken);
-            PushLocalBranchToVstsRepository(message, gitRepository);
+            PushLocalRepositoryToVsts(message, gitRepository);
         }
 
-        private static void PushLocalBranchToVstsRepository(PublishToVstsGitRepositoryCommand message, GitRepository gitRepository)
+        private static void PushLocalRepositoryToVsts(PublishToVstsGitRepositoryCommand message, GitRepository gitRepository)
         {
             var gitClient = new GitClient(message.Repository.Path);
             gitClient.AddUpstreamRemote(gitRepository.RemoteUrl);
