@@ -15,9 +15,16 @@ namespace TfsMigrate.Core.Exporter
             _writer = writer;
         }
 
-        public void ProccessCommit(CommitNode commit)
+        public string ProccessCommit(CommitNode commit)
         {
             commit.AcceptVisitor(this);
+
+            if (!commit.MarkId.HasValue)
+            {
+                throw new Exception("Commit node has no mark id");
+            }
+
+            return SharForMarkId(commit.MarkId.Value);
         }
 
         public void VistReset(ResetNode resetNode)
@@ -178,6 +185,12 @@ namespace TfsMigrate.Core.Exporter
 
             var reference = $":{dataNode.MarkId}";
             _writer.Write(reference);
+        }
+
+        private string SharForMarkId(int markId)
+        {
+            _writer.WriteLine($"get-mark :{markId}");
+            return _writer.ReadResponse();
         }
 
         private static long ToUnixTimestamp(DateTimeOffset dt)

@@ -47,7 +47,6 @@ namespace TfsMigrate.Core.Exporter
             };
 
             var process = Process.Start(processStartInfo);
-            Debug.Assert(process != null, nameof(process) + " != null");
             return process;
         }
     }

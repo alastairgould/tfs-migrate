@@ -10,19 +10,19 @@ namespace TfsMigrate.Powershell.Cmdlets
     [Cmdlet(VerbsData.Publish, "Vsts")]
     public class PublishVsts : Cmdlet
     {
-        [Parameter(Position = 0, ValueFromPipeline = true)]
+        [Parameter(Position = 0, ValueFromPipeline = true, Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public GitRepository GitRepository { get; set; }
 
-        [Parameter(Position = 1)]
+        [Parameter(Position = 1, Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string ProjectCollection { get; set; }
 
-        [Parameter(Position = 2)]
+        [Parameter(Position = 2, Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string TeamProject { get; set; }
 
-        [Parameter(Position = 3)]
+        [Parameter(Position = 3, Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string RepositoryName { get; set; }
 
@@ -36,8 +36,11 @@ namespace TfsMigrate.Powershell.Cmdlets
 
         protected override void ProcessRecord()
         {
-            _mediator.Send(new PublishToVstsGitRepositoryCommand(new Uri(ProjectCollection), TeamProject, RepositoryName,
-                GitRepository)).Wait();
+            var result = _mediator.Send(new PublishToVstsGitRepositoryCommand(new Uri(ProjectCollection), TeamProject,
+                RepositoryName,
+                GitRepository)).Result;
+
+            WriteObject(result);
         }
 
         public static Assembly BindingRedirect(object sender, ResolveEventArgs args)
