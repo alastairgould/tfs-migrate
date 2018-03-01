@@ -4,7 +4,7 @@ using TfsMigrate.Contracts;
 
 namespace TfsMigrate.Core.UseCases.PublishToVstsRepository
 {
-    public class PublishToVstsGitRepositoryCommand : IRequest
+    public class PublishToVstsGitRepositoryCommand : IRequest<VstsGitRepository>
     {
         public Uri ProjectCollection { get; }
 

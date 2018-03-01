@@ -4,7 +4,6 @@ using Autofac;
 using Autofac.Features.Variance;
 using MediatR;
 using TfsMigrate.Core.UseCases.ConvertTfsToGit;
-using TfsMigrate.Core.UseCases.ConvertTfsToGit.Events;
 
 namespace TfsMigrate.Powershell
 {
@@ -12,10 +11,10 @@ namespace TfsMigrate.Powershell
     {
         public static IMediator CreateMediator()
         {
-            return CreateMediator(null);
+            return CreateMediator<INotification>(null);
         }
 
-        public static IMediator CreateMediator(INotificationHandler<ProgressNotification> progressNotificationHandler)
+        public static IMediator CreateMediator<T>(INotificationHandler<T> progressNotificationHandler)  where T : INotification
         {
             var builder = new ContainerBuilder();
 
@@ -44,7 +43,7 @@ namespace TfsMigrate.Powershell
             builder.RegisterAssemblyTypes(typeof(ConvertTfsToGitCommand).GetTypeInfo().Assembly).AsImplementedInterfaces();
 
             if(progressNotificationHandler != null)
-                builder.RegisterInstance(progressNotificationHandler).As<INotificationHandler<ProgressNotification>>();
+                builder.RegisterInstance(progressNotificationHandler).As<INotificationHandler<T>>();
 
             var container = builder.Build();
             return container.Resolve<IMediator>();

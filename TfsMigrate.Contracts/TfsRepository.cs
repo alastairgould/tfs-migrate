@@ -7,5 +7,7 @@ namespace TfsMigrate.Contracts
         public Uri ProjectCollection { get; set; }
 
         public string Path { get; set; }
+
+        public bool ImportWorkItems { get; set; }
     }
 }

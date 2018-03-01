@@ -10,13 +10,17 @@ namespace TfsMigrate.Powershell.Cmdlets
         [Parameter(Position = 0, ValueFromPipeline = true)]
         public TfsRepository[] Repositories { get; set; }
 
-        [Parameter(Position = 1)]
+        [Parameter(Position = 1, Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string ProjectCollection { get; set; }
 
-        [Parameter(Position = 2)]
+        [Parameter(Position = 2, Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string Path { get; set; }
+
+        [Parameter(Position = 3)]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter ImportWorkItems { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -28,7 +32,8 @@ namespace TfsMigrate.Powershell.Cmdlets
             repos.Add(new TfsRepository()
             {
                 ProjectCollection = new System.Uri(ProjectCollection),
-                Path = Path
+                Path = Path,
+                ImportWorkItems = ImportWorkItems
             });
 
             WriteObject(repos.ToArray());

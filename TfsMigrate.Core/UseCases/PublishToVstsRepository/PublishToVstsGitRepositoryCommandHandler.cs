@@ -3,16 +3,26 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.SourceControl.WebApi;
+using TfsMigrate.Contracts;
 using TfsMigrate.Core.Exporter;
+using GitRepository = Microsoft.TeamFoundation.SourceControl.WebApi.GitRepository;
 
 namespace TfsMigrate.Core.UseCases.PublishToVstsRepository
 {
-    public class PublishToVstsGitRepositoryCommandHandler : IRequestHandler<PublishToVstsGitRepositoryCommand>
+    public class PublishToVstsGitRepositoryCommandHandler : IRequestHandler<PublishToVstsGitRepositoryCommand, VstsGitRepository>
     {
-        public async Task Handle(PublishToVstsGitRepositoryCommand message, CancellationToken cancellationToken)
+        public async Task<VstsGitRepository> Handle(PublishToVstsGitRepositoryCommand message, CancellationToken cancellationToken)
         {
             var gitRepository = await CreateVstsGitRepository(message, cancellationToken);
             PushLocalRepositoryToVsts(message, gitRepository);
+
+            return new VstsGitRepository()
+            {
+                GitRepository = message.Repository,
+                ProjectCollection =  message.ProjectCollection,
+                RepositoryName = message.RepositoryName,
+                TeamProject = message.TeamProject
+            };
         }
 
         private static void PushLocalRepositoryToVsts(PublishToVstsGitRepositoryCommand message, GitRepository gitRepository)
@@ -34,11 +44,10 @@ namespace TfsMigrate.Core.UseCases.PublishToVstsRepository
                 Name = message.RepositoryName
             };
 
-            gitRepository = await vstsGitApi.CreateRepositoryAsync(
+            return await vstsGitApi.CreateRepositoryAsync(
                 gitRepository,
                 message.TeamProject,
                 cancellationToken: cancellationToken);
-            return gitRepository;
         }
     }
 }

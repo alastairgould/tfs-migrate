@@ -6,13 +6,13 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 {
     public class ConvertTfsToGitCommand : IRequest<GitRepository>
     {
-        public IEnumerable<TfsRepository> Repositories { get; }
+        public IEnumerable<TfsRepository> TfsRepositories { get; }
         
         public string RepositoryDirectory { get; }
 
-        public ConvertTfsToGitCommand(IEnumerable<TfsRepository> repositories, string outputDirectory)
+        public ConvertTfsToGitCommand(IEnumerable<TfsRepository> tfsRepositories, string outputDirectory)
         {
-            Repositories = repositories;
+            TfsRepositories = tfsRepositories;
             RepositoryDirectory = outputDirectory;
         }
     }

@@ -16,6 +16,11 @@ namespace TfsMigrate.Core.Exporter
             AutoFlush = true;
         }
 
+        public string ReadResponse()
+        {
+            return _process.StandardOutput.ReadLine();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (_disposed)

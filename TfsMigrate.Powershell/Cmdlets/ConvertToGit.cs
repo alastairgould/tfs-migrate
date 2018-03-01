@@ -13,7 +13,8 @@ namespace TfsMigrate.Powershell.Cmdlets
     {
         [Parameter(
             Position = 0,
-            ValueFromPipeline = true
+            ValueFromPipeline = true,
+            Mandatory = true
         )]
         [ValidateNotNullOrEmpty]
         public TfsRepository[] Repositories { get; set; }
