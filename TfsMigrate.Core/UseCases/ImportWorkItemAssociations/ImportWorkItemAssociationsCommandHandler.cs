@@ -8,9 +8,9 @@ using Microsoft.TeamFoundation;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Git.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using TfsMigrate.Core.UseCases.ImportWorkItemAssociation.Events;
+using TfsMigrate.Core.UseCases.ImportWorkItemAssociations.Events;
 
-namespace TfsMigrate.Core.UseCases.ImportWorkItemAssociation
+namespace TfsMigrate.Core.UseCases.ImportWorkItemAssociations
 {
     public class ImportWorkItemAssociationsCommandHandler : IRequestHandler<ImportWorkItemAssociationsCommand>
     {
@@ -34,7 +34,7 @@ namespace TfsMigrate.Core.UseCases.ImportWorkItemAssociation
 
             var gitRepo = gitProjectRepoService.Single(gr => gr.Name == message.VstsGitRepository.RepositoryName);
 
-            var gitRepoGui = gitRepo.Id;
+            var gitRepoGuid = gitRepo.Id;
             var teamProjectGuid = teamProject.Guid;
 
             var total = message.VstsGitRepository.GitRepository.CommitWorkItemAssociations.Count;
@@ -46,7 +46,7 @@ namespace TfsMigrate.Core.UseCases.ImportWorkItemAssociation
 
                 foreach (var workItemId in commitAssoications.Value)
                 {
-                    CreateLinks(workItemStore, workItemId, teamProjectGuid, gitRepoGui, commitAssoications);
+                    CreateLinks(workItemStore, workItemId, teamProjectGuid, gitRepoGuid, commitAssoications);
                 }
 
                 processed++;
@@ -55,12 +55,12 @@ namespace TfsMigrate.Core.UseCases.ImportWorkItemAssociation
             return Task.CompletedTask;
         }
 
-        private static void CreateLinks(WorkItemStore workItemStore, int workItemId, Guid teamProjectGuid, Guid gitRepoGui,
+        private static void CreateLinks(WorkItemStore workItemStore, int workItemId, Guid teamProjectGuid, Guid gitRepoGuid,
             KeyValuePair<string, IEnumerable<int>> commitAssoications)
         {
             var workItem = workItemStore.GetWorkItem(workItemId);
 
-            var link = $"vstfs:///git/commit/{teamProjectGuid}%2f{gitRepoGui}%2f{commitAssoications.Key}";
+            var link = $"vstfs:///git/commit/{teamProjectGuid}%2f{gitRepoGuid}%2f{commitAssoications.Key}";
 
             ExternalLink changesetLink = new ExternalLink(
                 workItemStore.RegisteredLinkTypes[ArtifactLinkIds.Commit],
