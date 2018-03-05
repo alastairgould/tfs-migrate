@@ -22,7 +22,7 @@ namespace TfsMigrate.Powershell.Cmdlets
         [ValidateNotNullOrEmpty]
         public SwitchParameter ImportWorkItems { get; set; }
 
-        [Parameter(Position = 3)]
+        [Parameter(Position = 4)]
         [ValidateNotNullOrEmpty]
         public SwitchParameter Rename { get; set; }
 
