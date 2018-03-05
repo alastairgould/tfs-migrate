@@ -1,7 +1,7 @@
 ﻿using System;
 using MediatR;
 
-namespace TfsMigrate.Core.UseCases.ImportWorkItemAssociation.Events
+namespace TfsMigrate.Core.UseCases.ImportWorkItemAssociations.Events
 {
     public class ProgressNotification : INotification
     {

@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TfsMigrate.Contracts;
-using TfsMigrate.Core.UseCases.ImportWorkItemAssociation;
-using TfsMigrate.Core.UseCases.ImportWorkItemAssociation.Events;
+using TfsMigrate.Core.UseCases.ImportWorkItemAssociations;
+using TfsMigrate.Core.UseCases.ImportWorkItemAssociations.Events;
 
 namespace TfsMigrate.Powershell.Cmdlets
 {
