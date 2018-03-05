@@ -32,10 +32,15 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
         private int CalculateTotal()
         {
-            return _repositories
+            var sum = _repositories
                 .Select(repo => _retriveChangeSets.RetriveChangeSets(repo.ProjectCollection, repo.Path))
                 .Select(changeSets => changeSets.Count())
                 .Sum();
+
+            var skippedFirstCommits = _repositories.Count() - 1;
+            var skippedLastCommits = _repositories.Count(repo => repo.RenamedFrom);
+
+            return sum - (skippedFirstCommits + skippedLastCommits);
         }
 
         public void NextChangeSet(Changeset changeSet)

@@ -6,7 +6,7 @@
 
         public string BranchName { get; }
 
-        public string TfsPath { get; }
+        public string TfsPath { get; private set; }
 
         public CommitNode Head { get; private set; }
 
@@ -20,6 +20,16 @@
         public void UpdateHead(CommitNode newHead)
         {
             Head = newHead;
+        }
+
+        public void RenamePath(string path)
+        {
+            if(!path.EndsWith("/"))
+            {
+                path = path + "/";
+            }
+
+            TfsPath = path;
         }
     }
 }
