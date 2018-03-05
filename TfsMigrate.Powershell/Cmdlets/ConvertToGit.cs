@@ -35,6 +35,8 @@ namespace TfsMigrate.Powershell.Cmdlets
 
         protected override void ProcessRecord()
         {
+            CalculateRenamedFrom();
+
             var result = _mediator.Send(new ConvertTfsToGitCommand(Repositories,
                 LocalRepositoryPath)).Result;
 
@@ -52,6 +54,24 @@ namespace TfsMigrate.Powershell.Cmdlets
             progress.CurrentOperation = $"Currently processing commit: {notification.CurrentCommit}";
             WriteProgress(progress);
             return Task.CompletedTask;
+        }
+
+        private void CalculateRenamedFrom()
+        {
+            TfsRepository previousRepository = null;
+
+            foreach (var repo in Repositories)
+            {
+                if (previousRepository != null)
+                {
+                    if (repo.RenamedTo)
+                    {
+                        previousRepository.RenamedFrom = true;
+                    }
+                }
+
+                previousRepository = repo;
+            }
         }
     }
 }

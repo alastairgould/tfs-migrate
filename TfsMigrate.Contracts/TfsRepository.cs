@@ -9,5 +9,9 @@ namespace TfsMigrate.Contracts
         public string Path { get; set; }
 
         public bool ImportWorkItems { get; set; }
+
+        public bool RenamedFrom { get; set; }
+
+        public bool RenamedTo { get; set; }
     }
 }

@@ -22,6 +22,10 @@ namespace TfsMigrate.Powershell.Cmdlets
         [ValidateNotNullOrEmpty]
         public SwitchParameter ImportWorkItems { get; set; }
 
+        [Parameter(Position = 3)]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter Rename { get; set; }
+
         protected override void ProcessRecord()
         {
             var repos = new List<TfsRepository>();
@@ -33,7 +37,8 @@ namespace TfsMigrate.Powershell.Cmdlets
             {
                 ProjectCollection = new System.Uri(ProjectCollection),
                 Path = Path,
-                ImportWorkItems = ImportWorkItems
+                ImportWorkItems = ImportWorkItems,
+                RenamedTo = Rename
             });
 
             WriteObject(repos.ToArray());
