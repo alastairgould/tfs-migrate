@@ -96,7 +96,7 @@ namespace TfsMigrate.Tests.UseCases
         {
             var commandHandler = CreateSut();
             var command = CreateImportWorkItemAssocationCommand();
-            command.VstsGitRepository.RepositoryName = "";
+            command.VstsGitRepository.RepositoryName = null;
 
             var exception = await Record.ExceptionAsync(() => commandHandler.Handle(command, new CancellationToken()));
 
