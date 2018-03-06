@@ -42,7 +42,7 @@ namespace TfsMigrate.Powershell
 
             builder.RegisterAssemblyTypes(typeof(ConvertTfsToGitCommand).GetTypeInfo().Assembly).AsImplementedInterfaces();
 
-            if(progressNotificationHandler != null)
+            if (progressNotificationHandler != null)
                 builder.RegisterInstance(progressNotificationHandler).As<INotificationHandler<T>>();
 
             var container = builder.Build();

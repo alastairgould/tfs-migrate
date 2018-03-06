@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Contracts", "Tfs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Powershell", "TfsMigrate.Powershell\TfsMigrate.Powershell.csproj", "{7569A599-1152-43A5-9E8F-8BB23E706056}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Tests", "TfsMigrate.Tests\TfsMigrate.Tests.csproj", "{84C8A24D-04C9-4C2D-A37D-50BA88BA12D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7569A599-1152-43A5-9E8F-8BB23E706056}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7569A599-1152-43A5-9E8F-8BB23E706056}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7569A599-1152-43A5-9E8F-8BB23E706056}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C8A24D-04C9-4C2D-A37D-50BA88BA12D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C8A24D-04C9-4C2D-A37D-50BA88BA12D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C8A24D-04C9-4C2D-A37D-50BA88BA12D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C8A24D-04C9-4C2D-A37D-50BA88BA12D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
