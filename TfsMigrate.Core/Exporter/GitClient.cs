@@ -3,9 +3,9 @@ using System.IO;
 
 namespace TfsMigrate.Core.Exporter
 {
-    public class GitClient
+    public class GitClient : IGitClient
     {
-        private string _path;
+        private readonly string _path;
 
         public GitClient(string repositoryPath)
         {

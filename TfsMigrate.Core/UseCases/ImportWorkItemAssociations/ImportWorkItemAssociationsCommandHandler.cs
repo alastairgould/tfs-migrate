@@ -8,30 +8,30 @@ namespace TfsMigrate.Core.UseCases.ImportWorkItemAssociations
 {
     public class ImportWorkItemAssociationsCommandHandler : IRequestHandler<ImportWorkItemAssociationsCommand>
     {
+        private readonly IValidator<ImportWorkItemAssociationsCommand> _commandValidator;
         private readonly IMediator _mediator;
         private readonly ICreateWorkItemLink _createWorkItemLink;
-        private readonly IValidator<ImportWorkItemAssociationsCommand> _commandValidator;
 
         public ImportWorkItemAssociationsCommandHandler(IMediator mediator,
             ICreateWorkItemLink createWorkItemLink)
         { 
+            _commandValidator = new ImportWorkItemAssociationsCommandValidator();
             _mediator = mediator;
             _createWorkItemLink = createWorkItemLink;
-            _commandValidator = new ImportWorkItemAssociationsCommandValidator();
         }
 
-        public Task Handle(ImportWorkItemAssociationsCommand message, CancellationToken cancellationToken)
+        public Task Handle(ImportWorkItemAssociationsCommand command, CancellationToken cancellationToken)
         {
-            _commandValidator.ValidateAndThrow(message);
+            _commandValidator.ValidateAndThrow(command);
 
-            var projectCollection = message.VstsGitRepository.ProjectCollection;
-            var teamProjectName = message.VstsGitRepository.TeamProject;
-            var repositoryName = message.VstsGitRepository.RepositoryName;
+            var projectCollection = command.VstsGitRepository.ProjectCollection;
+            var teamProjectName = command.VstsGitRepository.TeamProject;
+            var repositoryName = command.VstsGitRepository.RepositoryName;
 
-            var total = message.VstsGitRepository.GitRepository.CommitWorkItemAssociations.Count;
+            var total = command.VstsGitRepository.GitRepository.CommitWorkItemAssociations.Count;
             var processed = 0;
 
-            foreach (var commitAssociations in message.VstsGitRepository.GitRepository.CommitWorkItemAssociations)
+            foreach (var commitAssociations in command.VstsGitRepository.GitRepository.CommitWorkItemAssociations)
             {
                 UpdateProgress(commitAssociations.Key, processed, total);
 
