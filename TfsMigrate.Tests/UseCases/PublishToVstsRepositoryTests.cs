@@ -120,7 +120,6 @@ namespace TfsMigrate.Tests.UseCases
         public async Task Given_A_PublishToVstsGitRepositoryCommand_With_A_Repository_With_A_Null_Path_When_The_Command_Is_Handled_Then_A_Validation_Exception_Is_Thrown()
         {
             var commandBuilder = new PublishToVstsGitRepositoryCommandBuilder {Repository = {Path = null}};
-
             var command = commandBuilder.CreateCommand();
             var commandHandler = createCommandHandler();
 
@@ -134,7 +133,6 @@ namespace TfsMigrate.Tests.UseCases
         public async Task Given_A_PublishToVstsGitRepositoryCommand_With_A_Repository_With_A_Empty_Path_When_The_Command_Is_Handled_Then_A_Validation_Exception_Is_Thrown()
         {
             var commandBuilder = new PublishToVstsGitRepositoryCommandBuilder {Repository = {Path = ""}};
-
             var command = commandBuilder.CreateCommand();
             var commandHandler = createCommandHandler();
 
@@ -148,7 +146,6 @@ namespace TfsMigrate.Tests.UseCases
         public async Task Given_A_PublishToVstsGitRepositoryCommand_With_A_Repository_With_A_Empty_Path_With_Whitespace_When_The_Command_Is_Handled_Then_A_Validation_Exception_Is_Thrown()
         {
             var commandBuilder = new PublishToVstsGitRepositoryCommandBuilder {Repository = {Path = "  "}};
-
             var command = commandBuilder.CreateCommand();
             var commandHandler = createCommandHandler();
 
