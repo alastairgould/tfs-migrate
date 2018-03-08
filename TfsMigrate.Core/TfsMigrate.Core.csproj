@@ -253,6 +253,7 @@
     <Compile Include="Exporter\GitFastImport.cs" />
     <Compile Include="CommitTree\Traverse\ITraverseCommitTree.cs" />
     <Compile Include="Exporter\GitStreamWriter.cs" />
+    <Compile Include="Exporter\IGitClient.cs" />
     <Compile Include="Importer\ActiveDirectoryEmailAddress.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\ChangeSetProgressNotifier.cs" />
     <Compile Include="Importer\IRetriveChangeSets.cs" />
@@ -270,8 +271,11 @@
     <Compile Include="UseCases\ImportWorkItemAssociations\ImportWorkItemAssociationsCommandHandler.cs" />
     <Compile Include="UseCases\ImportWorkItemAssociations\Events\ProgressNotification.cs" />
     <Compile Include="UseCases\ImportWorkItemAssociations\ImportWorkItemAssociationsCommandValidator.cs" />
+    <Compile Include="UseCases\PublishToVstsRepository\CreateVstsGitRepository.cs" />
+    <Compile Include="UseCases\PublishToVstsRepository\ICreateVstsGitRepository.cs" />
     <Compile Include="UseCases\PublishToVstsRepository\PublishToVstsGitRepositoryCommand.cs" />
     <Compile Include="UseCases\PublishToVstsRepository\PublishToVstsGitRepositoryCommandHandler.cs" />
+    <Compile Include="UseCases\PublishToVstsRepository\PublishToVstsGitRepositoryCommandValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
