@@ -46,7 +46,7 @@ namespace TfsMigrate.Core.UseCases.ImportWorkItemAssociations
             return Task.CompletedTask;
         }
 
-        public void UpdateProgress(string commitSha, int amountProccessed, int total)
+        private void UpdateProgress(string commitSha, int amountProccessed, int total)
         {
             _mediator.Publish(new ProgressNotification(
                 amountProccessed,
