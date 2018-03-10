@@ -18,9 +18,9 @@ namespace TfsMigrate.Core.Exporter
             RunGitCommand("init").WaitForExit();
         }
 
-        public Process FastImport()
+        public GitStreamWriter CreateGitStreamWriter()
         {
-            return RunGitCommand("fast-import");
+            return new GitStreamWriter(FastImport());
         }
 
         public void AddUpstreamRemote(string url)
@@ -33,6 +33,11 @@ namespace TfsMigrate.Core.Exporter
             RunGitCommand("push upstream --mirror").WaitForExit();
         }
 
+        private Process FastImport()
+        {
+            return RunGitCommand("fast-import");
+        }
+
         private Process RunGitCommand(string arguments)
         {
             var processStartInfo = new ProcessStartInfo("git")
@@ -42,7 +47,7 @@ namespace TfsMigrate.Core.Exporter
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 WorkingDirectory = _path,
-                CreateNoWindow = false,
+                CreateNoWindow = true,
                 Arguments = arguments
             };
 

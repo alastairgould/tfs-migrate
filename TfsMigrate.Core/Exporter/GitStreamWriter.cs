@@ -37,11 +37,5 @@ namespace TfsMigrate.Core.Exporter
             base.Dispose(disposing);
         }
 
-        public static GitStreamWriter CreateGitStreamWriter(string repositoryPath)
-        {
-            var gitClient = new GitClient(repositoryPath);
-            gitClient.Init();
-            return new GitStreamWriter(gitClient.FastImport());
-        }
     }
 }
