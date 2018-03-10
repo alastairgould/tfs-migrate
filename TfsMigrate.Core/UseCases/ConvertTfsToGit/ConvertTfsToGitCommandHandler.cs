@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.TeamFoundation.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
@@ -12,26 +14,37 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 {
     public class ConvertTfsToGitCommandHandler : IRequestHandler<ConvertTfsToGitCommand, GitRepository>
     {
-        private readonly IRetriveChangeSets _retriveChangeSets;
         private readonly IMediator _mediator;
+        private readonly IRetriveChangeSets _retriveChangeSets;
+        private readonly Func<string, IGitClient> _createGitClient;
         private readonly VersionControlState _versionControlState;
+        private readonly ConvertTfsToGitCommandValidator _commandValidator;
 
         private ChangeSetProgressNotifier _progressNotifier;
 
-        public ConvertTfsToGitCommandHandler(IRetriveChangeSets retriveChangeSets,
-            IMediator mediator)
+        public ConvertTfsToGitCommandHandler(IMediator mediator,
+            Func<string, IGitClient> createGitClient,
+            IRetriveChangeSets retriveChangeSets)
         {
-            _retriveChangeSets = retriveChangeSets;
             _mediator = mediator;
+            _createGitClient = createGitClient;
+            _retriveChangeSets = retriveChangeSets;
             _versionControlState = new VersionControlState();
+            _commandValidator = new ConvertTfsToGitCommandValidator();
         }
 
         public Task<GitRepository> Handle(ConvertTfsToGitCommand convertTfsToGitCommand, CancellationToken cancellationToken)
         {
+            _commandValidator.ValidateAndThrow(convertTfsToGitCommand);
+
             _progressNotifier = new ChangeSetProgressNotifier(convertTfsToGitCommand.TfsRepositories,
                 _retriveChangeSets, _mediator);
 
-            using (var writer = GitStreamWriter.CreateGitStreamWriter(convertTfsToGitCommand.RepositoryDirectory))
+            var gitClient = _createGitClient(convertTfsToGitCommand.RepositoryDirectory);
+
+            gitClient.Init();
+
+            using (var writer = gitClient.CreateGitStreamWriter())
             {
                 var shouldSkipFirstCommit = false;
 

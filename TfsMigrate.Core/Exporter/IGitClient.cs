@@ -5,7 +5,7 @@ namespace TfsMigrate.Core.Exporter
     public interface IGitClient
     {
         void Init();
-        Process FastImport();
+        GitStreamWriter CreateGitStreamWriter();
         void AddUpstreamRemote(string url);
         void PushAllUpstreamRemote();
     }

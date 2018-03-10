@@ -263,6 +263,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\ConvertTfsToGitCommand.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\ConvertTfsToGitCommandHandler.cs" />
+    <Compile Include="UseCases\ConvertTfsToGit\ConvertTfsToGitCommandValidator.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\Events\ProgressNotification.cs" />
     <Compile Include="UseCases\ConvertTfsToGit\VersionControlState.cs" />
     <Compile Include="UseCases\ImportWorkItemAssociations\CreateWorkItemLink.cs" />
