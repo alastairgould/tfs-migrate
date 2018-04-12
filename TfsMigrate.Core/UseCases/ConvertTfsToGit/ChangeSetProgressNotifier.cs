@@ -33,7 +33,7 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
         private int CalculateTotal()
         {
             var sum = _repositories
-                .Select(repo => _retriveChangeSets.RetriveChangeSets(repo.ProjectCollection, repo.Path))
+                .Select(repo => _retriveChangeSets.RetriveChangeSets(repo.ProjectCollection, repo.Path, repo.StartFrom != null))
                 .Select(changeSets => changeSets.Count())
                 .Sum();
 

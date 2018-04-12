@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Powershell", "Tf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsMigrate.Tests", "TfsMigrate.Tests\TfsMigrate.Tests.csproj", "{84C8A24D-04C9-4C2D-A37D-50BA88BA12D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{689437E0-F376-4486-A217-D47F04F320E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{84C8A24D-04C9-4C2D-A37D-50BA88BA12D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84C8A24D-04C9-4C2D-A37D-50BA88BA12D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84C8A24D-04C9-4C2D-A37D-50BA88BA12D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{689437E0-F376-4486-A217-D47F04F320E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{689437E0-F376-4486-A217-D47F04F320E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{689437E0-F376-4486-A217-D47F04F320E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{689437E0-F376-4486-A217-D47F04F320E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

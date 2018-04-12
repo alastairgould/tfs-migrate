@@ -50,7 +50,14 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
                 foreach (var tfsRepository in convertTfsToGitCommand.TfsRepositories)
                 {
-                    ConvertRepository(writer, tfsRepository, shouldSkipFirstCommit, tfsRepository.RenamedFrom);
+                    if (tfsRepository.StartFrom == null)
+                    {
+                        ConvertRepository(writer, tfsRepository, shouldSkipFirstCommit, tfsRepository.RenamedFrom, false);
+                    }
+                    else
+                    {
+                        ConvertRepository(writer, tfsRepository, shouldSkipFirstCommit, tfsRepository.RenamedFrom, false);
+                    }
                     shouldSkipFirstCommit = true;
                 }
             }
@@ -65,9 +72,10 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
         private void ConvertRepository(GitStreamWriter writer,
             TfsRepository tfsReposistory,
             bool shouldSkipFirstCommit,
-            bool shouldSkipLastCommit)
+            bool shouldSkipLastCommit,
+            bool startFrom)
         {
-            var changeSets = _retriveChangeSets.RetriveChangeSets(tfsReposistory.ProjectCollection, tfsReposistory.Path);
+            var changeSets = _retriveChangeSets.RetriveChangeSets(tfsReposistory.ProjectCollection, tfsReposistory.Path, startFrom);
 
             _versionControlState.Branches.CurrentBranch?.RenamePath(tfsReposistory.Path);
 
@@ -78,7 +86,7 @@ namespace TfsMigrate.Core.UseCases.ConvertTfsToGit
 
             if (shouldSkipLastCommit)
             {
-                changeSets = changeSets.Take(changeSets.Count() - 1);
+                changeSets = changeSets.Take(changeSets.Count() - 2);
             }
 
             foreach (var changeSet in changeSets)

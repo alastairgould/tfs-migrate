@@ -8,12 +8,24 @@ namespace TfsMigrate.Core.Importer
 {
     public class TfsRetriveChangeSets : IRetriveChangeSets
     {
-        public IEnumerable<Changeset> RetriveChangeSets(Uri tfsProjectCollection, string tfsPath)
+        public IEnumerable<Changeset> RetriveChangeSets(Uri tfsProjectCollection, string tfsPath, bool startFrom = false)
         {
             var collection = new TfsTeamProjectCollection(tfsProjectCollection);
             collection.EnsureAuthenticated();
             var versionControl = collection.GetService<VersionControlServer>();
 
+            ChangesetVersionSpec changeSetToStartFrom = null;
+
+            if (startFrom)
+            {
+                changeSetToStartFrom = new ChangesetVersionSpec(211223);
+            }
+            else
+            {
+                changeSetToStartFrom = new ChangesetVersionSpec(1);
+            }
+            
+            
             return versionControl
                 .QueryHistory(
                     tfsPath,
@@ -21,7 +33,7 @@ namespace TfsMigrate.Core.Importer
                     0,
                     RecursionType.Full,
                     null,
-                    new ChangesetVersionSpec(1),
+                    changeSetToStartFrom,
                     VersionSpec.Latest,
                     int.MaxValue,
                     true,

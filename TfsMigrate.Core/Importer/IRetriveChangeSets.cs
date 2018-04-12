@@ -6,6 +6,6 @@ namespace TfsMigrate.Core.Importer
 {
     public interface IRetriveChangeSets
     {
-        IEnumerable<Changeset> RetriveChangeSets(Uri tfsProjectCollection, string tfsPath);
+        IEnumerable<Changeset> RetriveChangeSets(Uri tfsProjectCollection, string tfsPath, bool startFrom);
     }
 }
