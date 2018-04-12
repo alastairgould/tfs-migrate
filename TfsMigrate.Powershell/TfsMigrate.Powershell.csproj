@@ -238,6 +238,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cmdlets\ConvertToGit.cs" />
+    <Compile Include="Cmdlets\GetWorkItemAssociations.cs" />
     <Compile Include="Cmdlets\ImportWorkItemAssocations.cs" />
     <Compile Include="Cmdlets\PublishVsts.cs" />
     <Compile Include="Cmdlets\GetTfsRepository.cs" />
